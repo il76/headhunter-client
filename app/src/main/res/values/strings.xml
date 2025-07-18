@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Practicum-Android-Diploma</string>
+    <string name="app_name">Headhunter client</string>
+
+    <string name="no_internet_connection">Отсутствует подключение к интернету</string>
+    <string name="internet_connection_restored">Подключение восстановлено</string>
+
+
 </resources>
