@@ -4,12 +4,22 @@ java = "VERSION_1_8"
 
 # Build constants
 minSdk = "26"
-compileSdk = "34"
-targetSdk = "33"
+compileSdk = "36"
+targetSdk = "36"
 
 # Detekt
 detekt = "1.23.3"
 detektTwitterComposeRules ="0.0.26"
+
+kotlin = "2.1.21"
+coroutines = "1.10.2"
+retrofit = "3.0.0"
+glide = "4.16.0"
+core-ktx = "1.16.0"
+appcompat = "1.7.1"
+constraintlayout = "2.2.1"
+
+
 
 [libraries]
 
@@ -36,5 +46,19 @@ unitTests-junit = "junit:junit:4.13.2"
 # UI tests
 uiTests-junitExt = "androidx.test.ext:junit:1.1.5"
 uiTests-espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
+
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+
+android-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
 
 [bundles]
