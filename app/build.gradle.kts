@@ -55,4 +55,16 @@ dependencies {
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
-}
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+
+    implementation(libs.android.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.constraintlayout)}
