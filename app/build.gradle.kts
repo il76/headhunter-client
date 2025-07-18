@@ -67,4 +67,5 @@ dependencies {
 
     implementation(libs.android.core.ktx)
     implementation(libs.appcompat)
-    implementation(libs.constraintlayout)}
+    implementation(libs.constraintlayout)
+}
