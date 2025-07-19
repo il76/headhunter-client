@@ -11,8 +11,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import ru.practicum.android.diploma.R
 
-
-class InternetBroadcastReceiver: BroadcastReceiver() {
+class InternetBroadcastReceiver : BroadcastReceiver() {
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action != "android.net.conn.CONNECTIVITY_CHANGE") {
@@ -39,21 +38,20 @@ class InternetBroadcastReceiver: BroadcastReceiver() {
 
     }
 
-
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     private fun isNetworkAvailable(connectivityManager: ConnectivityManager): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork ?: return false
-            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
 
-            return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            network != null && capabilities != null &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
                 capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         } else {
-            // Для старых версий (до Android 6.0)
             @Suppress("DEPRECATION")
-            val activeNetwork = connectivityManager.activeNetworkInfo ?: return false
+            val activeNetwork = connectivityManager.activeNetworkInfo
             @Suppress("DEPRECATION")
-            return activeNetwork.isConnected
+            activeNetwork?.isConnected == true
         }
     }
 }
