@@ -5,6 +5,12 @@
     android:id="@+id/navigation_graph"
     app:startDestination="@id/teamFragment">
     <fragment
+        android:id="@+id/searchFragment"
+        android:name="ru.practicum.android.diploma.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
+    </fragment>
+    <fragment
         android:id="@+id/teamFragment"
         android:name="ru.practicum.android.diploma.ui.team.TeamFragment"
         android:label="fragment_team"
