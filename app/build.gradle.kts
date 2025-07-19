@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.ui.constraintLayout)
 
     implementation(libs.koin.android)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
