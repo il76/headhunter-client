@@ -21,8 +21,7 @@ constraintlayout = "2.2.1"
 koinAndroid = "4.1.0"
 navigationFragmentKtx = "2.9.2"
 navigationUiKtx = "2.9.2"
-
-
+roomCompilerVersion = "2.7.2"
 
 [libraries]
 
@@ -66,5 +65,8 @@ koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = 
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompilerVersion" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompilerVersion" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompilerVersion" }
 
 [bundles]
