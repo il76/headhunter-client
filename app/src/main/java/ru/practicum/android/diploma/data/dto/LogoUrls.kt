@@ -1,7 +1,11 @@
 package ru.practicum.android.diploma.data.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class LogoUrls(
-    val _90: String?,
-    val _240: String?,
+    @SerializedName("_90")
+    val size90: String?,
+    @SerializedName("_240")
+    val size240: String?,
     val original: String?
 )
