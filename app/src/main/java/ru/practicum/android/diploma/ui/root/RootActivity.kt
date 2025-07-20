@@ -20,7 +20,7 @@ class RootActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.rootFragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController.also {
-            it.addOnDestinationChangedListener { controller, destination, argumetns ->
+            it.addOnDestinationChangedListener { controller, destination, arguments ->
                 binding.bottomNavigationView.isVisible = when (destination.id) {
                     else -> true
                 }
