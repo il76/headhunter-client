@@ -9,4 +9,8 @@
     <color name="red">#FFF56B6C</color>
     <color name="light_gray">#FFFDFDFD</color>
     <color name="background">#801A1B22</color>
+
+    <color name="search_edit_background">#FFE6E8EB</color>
+    <color name="search_edit_hint">@color/gray</color>
+
 </resources>
