@@ -1,21 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_search"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="@dimen/padding_16">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Информация о вакансии"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
-    </TextView>
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/titleBar"
+            style="@style/Font22Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:text="@string/vacancy_header"
+            app:layout_constraintBottom_toBottomOf="@id/backButton"
+            app:layout_constraintStart_toEndOf="@id/backButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/shareButton"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
+            android:layout_marginStart="@dimen/margin_8"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/ic_share"
+            app:layout_constraintEnd_toStartOf="@id/favButton"
+            app:layout_constraintTop_toTopOf="@id/backButton" />
+
+        <ImageView
+            android:id="@+id/favButton"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
+            android:src="@drawable/ic_favorite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/shareButton" />
+
+        <TextView
+            android:id="@+id/jobTitle"
+            style="@style/Font32Bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/image_size"
+            android:text="Android-разработчик"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/backButton" />
+
+        <TextView
+            android:id="@+id/salary"
+            style="@style/Font22Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:text="от 100 000 ₽"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/jobTitle" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/companyCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:background="@drawable/vacancy_card_shape"
+            android:padding="@dimen/padding_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/salary">
+
+            <ImageView
+                android:id="@+id/companyLogo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_vacancy_placeholder"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/companyName"
+                style="@style/Font22Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_8"
+                android:text="Еда"
+                app:layout_constraintStart_toEndOf="@id/companyLogo"
+                app:layout_constraintTop_toTopOf="@id/companyLogo" />
+
+            <TextView
+                android:id="@+id/companyLocation"
+                style="@style/Font16Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Москва"
+                app:layout_constraintStart_toStartOf="@id/companyName"
+                app:layout_constraintTop_toBottomOf="@id/companyName" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/experienceTitle"
+            style="@style/Font16Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:text="@string/vacancy_experience"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/companyCard" />
+
+        <TextView
+            android:id="@+id/experienceText"
+            style="@style/Font16Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:text="От 1 года до 3 лет"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/experienceTitle" />
+
+        <TextView
+            android:id="@+id/employmentText"
+            style="@style/Font16Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:text="Полная занятость, Удаленная работа"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/experienceText" />
+
+        <TextView
+            android:id="@+id/descTitle"
+            style="@style/Font22Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_32"
+            android:text="@string/vacancy_desc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/employmentText" />
+
+        <TextView
+            android:id="@+id/dutiesTitle"
+            style="@style/Font16Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="@string/vacancy_duties"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descTitle" />
+
+        <TextView
+            android:id="@+id/dutiesText"
+            style="@style/Font16Regular"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:text=" • Разрабатывать новую функциональность приложения\n • Помогать с интеграцией нашего SDK в другие приложения\n • Проектировать большие новые модули\n • Писать UI- и unit-тесты\n • Следить за работоспособностью сервиса и устранять технический долг"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dutiesTitle" />
+
+        <TextView
+            android:id="@+id/requirementsTitle"
+            style="@style/Font16Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="@string/vacancy_req"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dutiesText" />
+
+        <TextView
+            android:id="@+id/requirementsText"
+            style="@style/Font16Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:text=" • 100% Kotlin\n • WebRTC\n • CI по модели Trunk Based Development"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/requirementsTitle" />
+
+        <TextView
+            android:id="@+id/conditionsTitle"
+            style="@style/Font16Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="@string/vacancy_conditions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/requirementsText" />
+
+        <TextView
+            android:id="@+id/conditionsText"
+            style="@style/Font16Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_4"
+            android:text=" • сильная команда, с которой можно расти\n • возможность влиять на процесс и результат\n • расширенная программа ДМС: стоматология, обследования, вызов врача на дом и многое другое"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/conditionsTitle" />
+
+        <TextView
+            android:id="@+id/skillsTitle"
+            style="@style/Font22Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:text="@string/vacancy_skills"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/conditionsText" />
+
+        <TextView
+            android:id="@+id/skillsText"
+            style="@style/Font16Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text=" • Знание классических алгоритмов и структуры данных\n • Программирование для Android больше одного года\n • Знание WebRTC"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/skillsTitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
+
+
