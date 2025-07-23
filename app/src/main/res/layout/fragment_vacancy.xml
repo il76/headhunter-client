@@ -4,7 +4,7 @@
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/white_day_black_night"
     android:padding="@dimen/padding_16">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_8"
+                android:textColor="@color/white_day_black_night"
                 android:text="Еда"
                 app:layout_constraintStart_toEndOf="@id/companyLogo"
                 app:layout_constraintTop_toTopOf="@id/companyLogo" />
@@ -102,6 +103,7 @@
             <TextView
                 android:id="@+id/companyLocation"
                 style="@style/Font16Regular"
+                android:textColor="@color/white_day_black_night"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Москва"
