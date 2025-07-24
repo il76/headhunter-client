@@ -71,51 +71,6 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
         }
     }
 
-//    private fun loadData(page: Int, isInitial: Boolean) {
-//        viewModelScope.launch {
-//            try {
-//                val vacancies = repository.search(_state.value.searchQuery, page)
-//                    .first() // Получаем первый эмит из Flow
-//                val canLoadMore = vacancies?.size ?: 0 == PAGE_SIZE // пришёл непустой ответ, равный размеру страницы
-//
-//                _state.update { current ->
-//                    val newVacancies = if (page == 0) {
-//                        vacancies ?: emptyList()
-//                    } else {
-//                        current.vacancyList + (vacancies ?: emptyList())
-//                    }
-//
-//                    current.copy(
-//                        status = if (isInitial) {
-//                            if (newVacancies.isEmpty()) {
-//                                SearchUIState.SearchStatus.EMPTY_RESULT
-//                            } else {
-//                                SearchUIState.SearchStatus.SUCCESS
-//                            }
-//                        } else {
-//                            current.status
-//                        },
-//                        vacancyList = newVacancies,
-//                        pagination = SearchUIState.PaginationState.IDLE,
-//                        canLoadMore = canLoadMore,
-//                        isRefreshing = false
-//                    )
-//                }
-//            } catch (e: Exception) {
-//                _state.update {
-//                    if (isInitial) {
-//                        it.copy(status = SearchUIState.SearchStatus.ERROR_NET)
-//                    } else {
-//                        it.copy(
-//                            pagination = SearchUIState.PaginationState.ERROR(e),
-//                            isRefreshing = false
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     private fun loadData(page: Int, isInitial: Boolean) {
         viewModelScope.launch {
             when (val result = loadVacancies(page)) {
@@ -180,6 +135,152 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
 
     companion object {
         const val PAGE_SIZE = 20
+    }
+
+
+    init {
+        vacancyList = listOf(
+            Vacancy(
+                id = "122105390",
+                name = "Курьер-видеооператор",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Москва",
+                employerName = "Работодатель 1",
+                salaryCurrency = "RUR",
+                salaryFrom = 999,
+                salaryTo = 1084,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+            Vacancy(
+                id = "122774772",
+                name = "Продавец бытовой техники",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Петербург",
+                employerName = "Работодатель 2",
+                salaryCurrency = "RUR",
+                salaryFrom = null,
+                salaryTo = null,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+            Vacancy(
+                id = "122697402",
+                name = "Продавец-консультант (Pядом с домом)",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Сочи",
+                employerName = "Работодатель 3",
+                salaryCurrency = "RUR",
+                salaryFrom = 999,
+                salaryTo = 0,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf()
+            ),
+            Vacancy(
+                id = "123",
+                name = "Название вакансии 4",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Псков",
+                employerName = "Работодатель 4",
+                salaryCurrency = "RUR",
+                salaryFrom = 0,
+                salaryTo = 1084,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+            Vacancy(
+                id = "123",
+                name = "Название вакансии 5",
+                logoUrl = "",
+                areaName = "Новгород",
+                employerName = "Работодатель 5",
+                salaryCurrency = "RUR",
+                salaryFrom = 0,
+                salaryTo = 0,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+            Vacancy(
+                id = "122105390",
+                name = "Курьер-видеооператор",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Москва",
+                employerName = "Работодатель 1",
+                salaryCurrency = "RUR",
+                salaryFrom = 999,
+                salaryTo = 1084,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+            Vacancy(
+                id = "122774772",
+                name = "Продавец бытовой техники",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Петербург",
+                employerName = "Работодатель 2",
+                salaryCurrency = "RUR",
+                salaryFrom = null,
+                salaryTo = null,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+            Vacancy(
+                id = "122697402",
+                name = "Продавец-консультант (Pядом с домом)",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Сочи",
+                employerName = "Работодатель 3",
+                salaryCurrency = "RUR",
+                salaryFrom = 999,
+                salaryTo = 0,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf()
+            ),
+            Vacancy(
+                id = "123",
+                name = "Название вакансии 4",
+                logoUrl = "https://hh.ru/employer-logo/7177004.png",
+                areaName = "Псков",
+                employerName = "Работодатель 4",
+                salaryCurrency = "RUR",
+                salaryFrom = 0,
+                salaryTo = 1084,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+            Vacancy(
+                id = "123",
+                name = "Название вакансии 5",
+                logoUrl = "",
+                areaName = "Новгород",
+                employerName = "Работодатель 5",
+                salaryCurrency = "RUR",
+                salaryFrom = 0,
+                salaryTo = 0,
+                experience = "да",
+                employment = "полная",
+                description = "Требуются рабочие для работы на работе. Оплата деньгами",
+                keySkills = listOf("Умение работать", "Умение хорошо работать")
+            ),
+        )
     }
 
 }

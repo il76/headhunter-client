@@ -10,10 +10,10 @@ import ru.practicum.android.diploma.domain.models.Vacancy
 class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyRepository {
 
     override fun search(query: String, page: Int): Flow<List<Vacancy>?> = flow {
-        val response = networkClient.doRequest(VacancySearchRequest(query))
+        val response = networkClient.doRequest(VacancySearchRequest(query, page = page))
         if (response.resultError == "") {
             with(response as VacancySearchResponse) {
-                val data = results.map { vacancy ->
+                val data = results?.map { vacancy ->
                     Vacancy(
                         "", // временно, нужно разобраться, как его подставить из HH
                         vacancy.name,
