@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_8"
-                android:textColor="@color/white_day_black_night"
+                android:textColor="@color/black"
                 android:text="Еда"
                 app:layout_constraintStart_toEndOf="@id/companyLogo"
                 app:layout_constraintTop_toTopOf="@id/companyLogo" />
@@ -103,7 +103,7 @@
             <TextView
                 android:id="@+id/companyLocation"
                 style="@style/Font16Regular"
-                android:textColor="@color/white_day_black_night"
+                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Москва"
