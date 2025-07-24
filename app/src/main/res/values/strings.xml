@@ -17,5 +17,6 @@
     <string name="filter_settings">Настройки фильтрации</string>
     <string name="title_search">Поиск вакансий</string>
     <string name="search_hint">Введите запрос</string>
+    <string name="empty_salary">Зарплата не указана</string>
 
 </resources>

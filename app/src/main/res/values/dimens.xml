@@ -8,4 +8,6 @@
     <dimen name="font_weight_400">400</dimen>
     <dimen name="font_weight_500">500</dimen>
     <dimen name="font_weight_700">700</dimen>
+
+    <dimen name="logo_border_radius">12dp</dimen>
 </resources>
