@@ -9,18 +9,32 @@
         android:name="ru.practicum.android.diploma.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_vacancyFragment"
+            app:destination="@id/vacancyFragment" />
     </fragment>
     <fragment
         android:id="@+id/teamFragment"
         android:name="ru.practicum.android.diploma.ui.team.TeamFragment"
         android:label="fragment_team"
-        tools:layout="@layout/fragment_team">
-    </fragment>
+        tools:layout="@layout/fragment_team" />
 
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="ru.practicum.android.diploma.ui.favorite.FavoriteFragment"
         android:label="favorite"
-        tools:layout="@layout/fragment_favorite">
-    </fragment>
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/vacancyFragment"
+        android:name="ru.practicum.android.diploma.ui.vacancy.VacancyFragment"
+        android:label="VacancyFragment"
+        tools:layout="@layout/fragment_vacancy"/>
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="ru.practicum.android.diploma.ui.filter.FilterFragment"
+        android:label="FilterFragment"
+        tools:layout="@layout/fragment_filter" />
 </navigation>
