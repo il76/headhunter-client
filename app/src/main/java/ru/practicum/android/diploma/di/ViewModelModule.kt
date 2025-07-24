@@ -18,7 +18,9 @@ val viewModelModule = module {
     }
 
     viewModel {
-        SearchViewModel()
+        SearchViewModel(
+            repository = get()
+        )
     }
 
     viewModel {
