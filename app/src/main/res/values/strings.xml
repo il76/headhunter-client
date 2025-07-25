@@ -15,4 +15,13 @@
     <string name="team_second">Андрей</string>
     <string name="team_third">Марат</string>
 
+    <!--  Экран Описание вакансии  /-->
+    <string name="vacancy_header">Вакансия</string>
+    <string name="vacancy_experience">Требуемый опыт</string>
+    <string name="vacancy_desc">Описание вакансии</string>
+    <string name="vacancy_duties">Обязанности</string>
+    <string name="vacancy_req">Требования</string>
+    <string name="vacancy_conditions">Условия</string>
+    <string name="vacancy_skills">Ключевые навыки</string>
+
 </resources>
