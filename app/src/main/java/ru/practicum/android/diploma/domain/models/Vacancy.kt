@@ -9,8 +9,4 @@ data class Vacancy(
     val salaryCurrency: String,
     val salaryFrom: Int?,
     val salaryTo: Int?,
-    val experience: String,
-    val employment: String,
-    val description: String,
-    val keySkills: List<String>,
 )
