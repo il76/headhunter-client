@@ -24,9 +24,9 @@ class VacancyRepositoryImpl(
                                 id = it.id,
                                 name = it.name,
                                 logoUrl = it.employer?.logoUrls?.original.toString(),
-                                areaName = it.area?.name?:"",
-                                employerName = it.employer?.name?:"",
-                                salaryCurrency = it.salary?.currency?:"",
+                                areaName = it.area?.name ?: "",
+                                employerName = it.employer?.name ?: "",
+                                salaryCurrency = it.salary?.currency ?: "",
                                 salaryFrom = it.salary?.from,
                                 salaryTo = it.salary?.to,
                             )
