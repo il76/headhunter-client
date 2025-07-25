@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+    implementation(libs.swiperefreshlayout)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
