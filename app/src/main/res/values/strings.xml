@@ -14,6 +14,10 @@
     <string name="team_first">Илья</string>
     <string name="team_second">Андрей</string>
     <string name="team_third">Марат</string>
+    <string name="filter_settings">Настройки фильтрации</string>
+    <string name="title_search">Поиск вакансий</string>
+    <string name="search_hint">Введите запрос</string>
+    <string name="empty_salary">Зарплата не указана</string>
 
     <!--  Экран Описание вакансии  /-->
     <string name="vacancy_header">Вакансия</string>

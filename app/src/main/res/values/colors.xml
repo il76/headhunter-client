@@ -10,4 +10,8 @@
     <color name="light_gray">#FFFDFDFD</color>
     <color name="vacancy_card">#E6E8EB</color>
     <color name="background">#801A1B22</color>
+
+    <color name="search_edit_background">#FFE6E8EB</color>
+    <color name="search_edit_hint">@color/gray</color>
+
 </resources>
