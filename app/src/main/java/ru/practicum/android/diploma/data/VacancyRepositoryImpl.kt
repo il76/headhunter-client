@@ -16,29 +16,22 @@ class VacancyRepositoryImpl(
         when (response.resultCode) {
             NO_INTERNET -> emit(Resource.Error("Check connection to internet"))
             REQUEST_OK -> {
-                println("REQUEST_OK ${(response as VacancySearchResponse).results}")
-//                emit(
-//                    Resource.Success(
-//                        (response as VacancySearchResponse).results.map {
-//
-//                            Vacancy(
-//                                name = it.name,
-//                                logoUrl = it.employer.logoUrls.original.toString(),
-//                                areaName = it.area.name,
-//                                employerName = it.employer.name,
-//                                salaryCurrency = it.salary?.currency?:"",
-//                                salaryFrom = it.salary?.from,
-//                                salaryTo = it.salary?.to,
-//                                experience = it.experience.name,
-//                                employment = it.employment.name,
-//                                description = it.description,
-//                                keySkills = it.keySkills.map { skils->
-//                                    skils.name
-//                                }
-//                            )
-//                        }
-//                    )
-//                )
+                emit(
+                    Resource.Success(
+                        (response as VacancySearchResponse).items.map {
+                            Vacancy(
+                                id = it.id,
+                                name = it.name,
+                                logoUrl = it.employer?.logoUrls?.original.toString(),
+                                areaName = it.area?.name?:"",
+                                employerName = it.employer?.name?:"",
+                                salaryCurrency = it.salary?.currency?:"",
+                                salaryFrom = it.salary?.from,
+                                salaryTo = it.salary?.to,
+                            )
+                        }
+                    )
+                )
             }
             else -> emit(Resource.Error(response.resultError))
         }

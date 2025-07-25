@@ -13,7 +13,9 @@ class SearchViewModel(
             interactor
                 .searchVacancies(searchText)
                 .collect {
-                    println("receive: $it")
+                    it.first?.forEach { vacancy ->
+                        println("receive: ${vacancy.name}")
+                    }
                 }
         }
     }
