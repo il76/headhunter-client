@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.Response
+import ru.practicum.android.diploma.data.dto.VacancyDetailsRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import java.io.IOException
 
@@ -12,20 +13,32 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
 
     override suspend fun doRequest(dto: Any): Response {
-        if (dto !is VacancySearchRequest) {
-            return Response().apply {
-                resultCode = BAD_REQUEST_CODE
-                resultError = "Invalid request type"
-            }
-        }
-
         return try {
-            val response = withContext(Dispatchers.IO) {
-                hhService.getVacancies(dto.text)
-            }
-            response.apply {
-                resultCode = HTTP_SUCCESS_CODE
-                resultError = ""
+            when (dto) {
+                is VacancySearchRequest -> {
+                    val response = withContext(Dispatchers.IO) {
+                        hhService.getVacancies(dto.text)
+                    }
+                    response.apply {
+                        resultCode = HTTP_SUCCESS_CODE
+                        resultError = ""
+                    }
+                }
+
+                is VacancyDetailsRequest -> {
+                    val response = withContext(Dispatchers.IO) {
+                        hhService.getVacancies(dto.vacancyId)
+                    }
+                    response.apply {
+                        resultCode = HTTP_SUCCESS_CODE
+                        resultError = ""
+                    }
+                }
+
+                else -> return Response().apply {
+                    resultCode = BAD_REQUEST_CODE
+                    resultError = "Invalid request type"
+                }
             }
         } catch (e: IOException) {
             Response().apply {
@@ -38,6 +51,7 @@ class RetrofitNetworkClient(
                 resultError = "HTTP error: ${e.message}"
             }
         }
+
 // detekt не пропускает этот блок! И как ловить неопределённые исключения?
 // пока оставлю этот комментарий до момента фактической реализации
 //        } catch (e: Exception) {
