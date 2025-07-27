@@ -2,11 +2,13 @@ package ru.practicum.android.diploma.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.practicum.android.diploma.data.dto.VacancyDetailsRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.VacancyDetailsState
 import ru.practicum.android.diploma.util.Resource
 
 class VacancyRepositoryImpl(
@@ -38,6 +40,11 @@ class VacancyRepositoryImpl(
         }
 
     }
+
+    override fun getVacancyDetails(vacancyId: String): Flow<VacancyDetailsState> = flow {
+        val response = networkClient.doRequest(VacancyDetailsRequest(vacancyId))
+    }
+
     companion object {
         const val REQUEST_OK = 200
         const val NO_INTERNET = -1

@@ -27,7 +27,7 @@ class RetrofitNetworkClient(
 
                 is VacancyDetailsRequest -> {
                     val response = withContext(Dispatchers.IO) {
-                        hhService.getVacancies(dto.vacancyId)
+                        hhService.getVacancyDetails(dto.vacancyId)
                     }
                     response.apply {
                         resultCode = HTTP_SUCCESS_CODE
