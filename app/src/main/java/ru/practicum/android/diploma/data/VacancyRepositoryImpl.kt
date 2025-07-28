@@ -45,11 +45,11 @@ class VacancyRepositoryImpl(
 
     override fun getVacancyDetails(vacancyId: String): Flow<VacancyDetailsState> = flow {
         val response = networkClient.doRequest(VacancyDetailsRequest(vacancyId))
-        when(response.resultCode) {
+        when (response.resultCode) {
             NO_INTERNET -> emit(VacancyDetailsState.ConnectionError)
             REQUEST_OK -> {
                 emit(VacancyDetailsState.ContentState(
-                    with(response as VacancyDetailsResponse){
+                    with(response as VacancyDetailsResponse) {
                         Vacancy(
                             id = this.id,
                             name = this.name,
