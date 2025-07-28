@@ -1,10 +1,15 @@
 package ru.practicum.android.diploma.ui.search
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -36,12 +41,32 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private val textWatcher by lazy {
+        object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                return // спасибо detekt, который запрещает пустое тело метода
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val value = s?.toString() ?: ""
+                // viewModel.searchDebounce(changedText = value)
+                binding.searchIconClear.isVisible = value.isNotEmpty()
+                binding.searchIconStartSearch.isVisible = value.isEmpty()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                return // спасибо detekt, который запрещает пустое тело метода
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
+        binding.searchEditText.removeTextChangedListener(textWatcher)
         _binding = null
         super.onDestroyView()
     }
@@ -62,7 +87,22 @@ class SearchFragment : Fragment() {
                 }
             }
         })
+        // очистка поискового запроса
+        binding.searchIconClear.setOnClickListener {
+            binding.searchEditText.setText("")
+            val inputMethodManager = requireActivity().getSystemService<InputMethodManager>()
+            inputMethodManager?.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
+            // viewModel.setSearchText("")
+        }
 
+//        binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
+//
+//        }
+
+        // слушаем изменения текстового поля
+        binding.searchEditText.addTextChangedListener(textWatcher)
+
+        textWatcher?.let { binding.searchEditText.addTextChangedListener(it) }
     }
 
     companion object {
