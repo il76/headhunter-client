@@ -2,6 +2,8 @@ package ru.practicum.android.diploma.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +23,8 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
     val state: StateFlow<SearchUIState> = _state.asStateFlow()
 
     private var currentPage = 0
+
+    private var searchJob: Job? = null
 
     fun search(query: String) {
         currentPage = 0
@@ -128,6 +132,30 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
         }
     }
 
+    fun updateSearchQuery(newQuery: String) {
+        _state.update { currentState ->
+            currentState.copy(searchQuery = newQuery)
+        }
+        // Отменяем предыдущий запрос, если он есть
+        searchJob?.cancel()
+
+        // Если запрос не пустой, запускаем новый отложенный поиск
+        if (newQuery.isNotBlank()) {
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                search(newQuery)
+            }
+        } else {
+            // Если запрос пустой, очищаем результаты
+            _state.update {
+                it.copy(
+                    status = SearchUIState.SearchStatus.NONE,
+                    vacancyList = emptyList()
+                )
+            }
+        }
+    }
+
     private sealed class VacancyResult {
         data class Success(val vacancies: List<Vacancy>?) : VacancyResult()
         data class Error(val exception: Exception) : VacancyResult()
@@ -135,6 +163,7 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
 
     companion object {
         const val PAGE_SIZE = 20
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }

@@ -7,14 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -49,13 +53,13 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val value = s?.toString() ?: ""
-                // viewModel.searchDebounce(changedText = value)
+                viewModel.updateSearchQuery(value)
                 binding.searchIconClear.isVisible = value.isNotEmpty()
                 binding.searchIconStartSearch.isVisible = value.isEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                return // спасибо detekt, который запрещает пустое тело метода
+                return // см. выше
             }
         }
     }
@@ -73,12 +77,16 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        setupSwipeRefresh()
+        setupSearchView()
+        observeState()
+    }
+
+    // список вакансий
+    private fun setupRecyclerView() {
         binding.vacancyList.layoutManager = LinearLayoutManager(requireActivity())
         binding.vacancyList.adapter = VacancyListAdapter(viewModel.vacancyList, onVacancyClickDebounce)
-        // свайп для обновления
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refresh()
-        }
         // обработка пагинации
         binding.vacancyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -87,22 +95,121 @@ class SearchFragment : Fragment() {
                 }
             }
         })
+    }
+
+    // свайп для обновления
+    private fun setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
+    }
+
+    private fun setupSearchView() {
         // очистка поискового запроса
         binding.searchIconClear.setOnClickListener {
             binding.searchEditText.setText("")
             val inputMethodManager = requireActivity().getSystemService<InputMethodManager>()
             inputMethodManager?.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
-            // viewModel.setSearchText("")
+            viewModel.updateSearchQuery("")
         }
 
 //        binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
-//
+//  если не потребуется - убрать
 //        }
 
         // слушаем изменения текстового поля
         binding.searchEditText.addTextChangedListener(textWatcher)
+    }
 
-        textWatcher?.let { binding.searchEditText.addTextChangedListener(it) }
+    // разбор состояния
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    handleMainState(state)
+                    handlePaginationState(state)
+                    handleRefreshState(state)
+                }
+            }
+        }
+    }
+
+    private fun handleMainState(state: SearchUIState) {
+        when (state.status) {
+            SearchUIState.SearchStatus.LOADING -> {
+                if (state.vacancyList.isEmpty()) {
+                    showFullscreenLoading()
+                }
+            }
+            SearchUIState.SearchStatus.SUCCESS -> {
+                hideFullscreenLoading()
+                // binding.vacancyList.adapter.submitList(state.vacancyList) - fix it
+            }
+            SearchUIState.SearchStatus.ERROR_NET -> {
+                hideFullscreenLoading()
+                showErrorView()
+            }
+            SearchUIState.SearchStatus.EMPTY_RESULT -> {
+                hideFullscreenLoading()
+                showEmptyView()
+            }
+            SearchUIState.SearchStatus.NONE -> {
+                showEmptyView()
+                binding.progressBar.isVisible = false
+            }
+        }
+    }
+
+    // загрузка начата
+    private fun showFullscreenLoading() {
+        binding.progressBar.isVisible = true
+        binding.vacancyList.isVisible = false
+        binding.errorBlock.isVisible = false
+    }
+
+    // загрузка завершена
+    private fun hideFullscreenLoading() {
+        binding.progressBar.isVisible = false
+        binding.vacancyList.isVisible = true
+        // binding.errorBlock.isVisible = false
+    }
+
+    // догрузка начата
+    private fun showBottomLoading() {
+        // binding.bottomProgressBar.isVisible = true
+    }
+
+    // догрузка завершена
+    private fun hideBottomLoading() {
+        // binding.bottomProgressBar.isVisible = false
+    }
+
+    // ничего не нашлось
+    private fun showEmptyView() {
+        binding.vacancyList.isVisible = false
+        binding.errorBlock.isVisible = true
+    }
+
+    // ошибка
+    private fun showErrorView() {
+        binding.vacancyList.isVisible = false
+        binding.errorBlock.isVisible = true
+    }
+
+    private fun handlePaginationState(state: SearchUIState) {
+        when (state.pagination) {
+            SearchUIState.PaginationState.LOADING -> showBottomLoading()
+            is SearchUIState.PaginationState.ERROR -> showPaginationError(state.pagination.error)
+            SearchUIState.PaginationState.IDLE -> hideBottomLoading()
+        }
+    }
+
+    private fun showPaginationError(error: Throwable) {
+        Toast.makeText(requireContext(), "Ошибка загрузки: ${error.message}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleRefreshState(state: SearchUIState) {
+        binding.swipeRefreshLayout.isRefreshing = state.isRefreshing
     }
 
     companion object {
