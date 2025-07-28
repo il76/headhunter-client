@@ -1,5 +1,13 @@
 package ru.practicum.android.diploma.data.dto
 
-import ru.practicum.android.diploma.domain.models.Vacancy
-
-class VacancyDetailsResponse(val vacancy: Vacancy) : Response()
+class VacancyDetailsResponse(
+    val id: String,
+    val name: String,
+    val area: Area?,
+    val salary: Salary?,
+    val employer: Employer?,
+    val experience: Experience?,
+    val employment: Employment?,
+    val description: String?,
+    val keySkills: List<KeySkill>?
+) : Response()
