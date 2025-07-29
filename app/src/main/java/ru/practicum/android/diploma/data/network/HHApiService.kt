@@ -11,7 +11,7 @@ interface HHApiService {
     suspend fun getVacancies(
         @Query("text", encoded = false) text: String,
         @Query("page", encoded = false) page: String
-    ) : VacancySearchResponse
+    ): VacancySearchResponse
 
     @GET("vacancies/{vacancyId}")
     suspend fun getVacancyDetails(@Path("vacancyId") vacancyId: String): VacancyDetailsResponse
