@@ -15,7 +15,7 @@ class VacancyRepositoryImpl(
     private val networkClient: NetworkClient
 ) : VacancyRepository {
     override fun search(query: String, page: Int): Flow<Resource<List<Vacancy>>> = flow {
-        val response = networkClient.doRequest(VacancySearchRequest(query, 1))
+        val response = networkClient.doRequest(VacancySearchRequest(query, page))
         when (response.resultCode) {
             NO_INTERNET -> emit(Resource.Error("Check connection to internet"))
             REQUEST_OK -> {
