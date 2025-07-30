@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.ui.root
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +35,7 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController.also {
             it.addOnDestinationChangedListener { controller, destination, arguments ->
                 binding.bottomNavigationView.isVisible = when (destination.id) {
+                    R.id.filterFragment, R.id.vacancyFragment -> false
                     else -> true
                 }
             }
