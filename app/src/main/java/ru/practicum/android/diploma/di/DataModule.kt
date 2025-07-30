@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.db.AppDatabase
+import ru.practicum.android.diploma.data.db.Converters
 import ru.practicum.android.diploma.data.network.HHApiService
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
@@ -20,6 +21,8 @@ val dataModule = module {
     factory {
         Gson()
     }
+
+    single { Converters(get()) }
 
     single<NetworkClient> {
         RetrofitNetworkClient(get())
@@ -36,6 +39,7 @@ val dataModule = module {
     single {
         databaseBuilder(androidContext(), AppDatabase::class.java, "hh.db")
             .fallbackToDestructiveMigration() // на время отладки, чтобы не писать постоянно миграции
+            .addTypeConverter(get<Converters>())
             .build()
     }
 }

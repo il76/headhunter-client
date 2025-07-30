@@ -7,6 +7,7 @@ import org.koin.core.context.startKoin
 import ru.practicum.android.diploma.di.dataModule
 import ru.practicum.android.diploma.di.interactorModule
 import ru.practicum.android.diploma.di.repositoryModule
+import ru.practicum.android.diploma.di.sharingModule
 import ru.practicum.android.diploma.di.viewModelModule
 
 class App : Application() {
@@ -16,11 +17,11 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule, sharingModule)
         }
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
+    private fun switchTheme(darkThemeEnabled: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
