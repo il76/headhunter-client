@@ -12,7 +12,6 @@ class VacancyListViewHolder(private val binding: VacancySearchItemBinding) : Rec
         Glide.with(binding.root)
             .load(vacancy.logoUrl)
             .placeholder(R.drawable.ic_vacancy_placeholder)
-            .centerInside()
             .transform(RoundedCorners(binding.root.context.resources.getDimensionPixelSize(R.dimen.logo_border_radius)))
             .into(binding.vacancyListLogo)
 

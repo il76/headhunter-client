@@ -44,6 +44,7 @@ class SearchFragment : Fragment() {
             )
         }
     }
+    private val adapter get() = binding.vacancyList.adapter as VacancyListAdapter
 
     private val textWatcher by lazy {
         object : TextWatcher {
@@ -86,7 +87,18 @@ class SearchFragment : Fragment() {
     // список вакансий
     private fun setupRecyclerView() {
         binding.vacancyList.layoutManager = LinearLayoutManager(requireActivity())
-        binding.vacancyList.adapter = VacancyListAdapter(viewModel.vacancyList, onVacancyClickDebounce)
+        // binding.vacancyList.adapter = VacancyListAdapter(onVacancyClickDebounce)
+        // временно отключил дебаунсер до устранения проблем с неработающим кликом
+        binding.vacancyList.adapter = VacancyListAdapter(
+            { vacancy ->
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_vacancyFragment,
+                    bundleOf("vacancyId" to vacancy.id)
+                )
+            }
+        )
+
+        adapter.submitList(viewModel.vacancyList)
         // обработка пагинации
         binding.vacancyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -143,7 +155,7 @@ class SearchFragment : Fragment() {
             }
             SearchUIState.SearchStatus.SUCCESS -> {
                 hideFullscreenLoading()
-                // binding.vacancyList.adapter.submitList(state.vacancyList) - fix it
+                adapter.submitList(state.vacancyList)
             }
             SearchUIState.SearchStatus.ERROR_NET -> {
                 hideFullscreenLoading()
