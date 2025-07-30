@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.getSystemService
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -23,6 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.ui.vacancy.VacancyFragment
 import ru.practicum.android.diploma.util.debounce
 
 class SearchFragment : Fragment() {
@@ -40,8 +40,9 @@ class SearchFragment : Fragment() {
         ) { vacancy ->
             findNavController().navigate(
                 R.id.action_searchFragment_to_vacancyFragment,
-                bundleOf("vacancyId" to vacancy.id)
+                VacancyFragment.createArguments(vacancy.id.toInt())
             )
+
         }
     }
     private val adapter get() = binding.vacancyList.adapter as VacancyListAdapter
@@ -99,7 +100,7 @@ class SearchFragment : Fragment() {
             { vacancy ->
                 findNavController().navigate(
                     R.id.action_searchFragment_to_vacancyFragment,
-                    bundleOf("vacancyId" to vacancy.id)
+                    VacancyFragment.createArguments(vacancy.id.toInt())
                 )
             }
         )
