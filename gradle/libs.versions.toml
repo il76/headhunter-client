@@ -22,6 +22,7 @@ koinAndroid = "4.1.0"
 navigationFragmentKtx = "2.9.2"
 navigationUiKtx = "2.9.2"
 roomCompilerVersion = "2.7.2"
+swiperefreshlayout = "1.1.0"
 
 [libraries]
 
@@ -68,5 +69,6 @@ navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx",
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompilerVersion" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompilerVersion" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompilerVersion" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [bundles]

@@ -14,7 +14,7 @@ import ru.practicum.android.diploma.R
 class InternetBroadcastReceiver : BroadcastReceiver() {
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action != "android.net.conn.CONNECTIVITY_CHANGE") {
+        if (intent?.action != ConnectivityManager.CONNECTIVITY_ACTION) {
             return
         }
         val connectivityManager =
