@@ -57,12 +57,14 @@
         app:layout_constraintTop_toBottomOf="@id/appbarlayout">
 
         <ImageView
+            android:id="@+id/search_icon_start_search"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center|end"
             android:layout_marginHorizontal="12dp"
             android:padding="3dp"
             android:src="@drawable/ic_search"
+            android:visibility="visible"
             app:tint="@color/black" />
 
         <EditText
@@ -92,42 +94,28 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <!--    Будет вынесено в инклуд позже-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="140dp"
+        android:indeterminateTint="@color/blue"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_container">
+        app:layout_constraintTop_toBottomOf="@id/search_container" />
 
-        <ImageView
-            android:id="@+id/search_results_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="16dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ph_start_search" />
-        <!--        android:src="@drawable/ph_start_search"-->
-        <!--        android:src="@drawable/ph_no_internet"-->
-        <!--        android:src="@drawable/ph_nothing_found"-->
-        <!--        android:src="@drawable/ph_empty_favs" />-->
-        <!--        android:src="@drawable/ph_error_get_list" />-->
-        <!--        android:src="@drawable/ph_server_error_search" />-->
-        <!--        android:src="@drawable/ph_server_error_vacancy" />-->
-
-        <TextView
-            android:id="@+id/search_results_placeholder_caption"
-            style="@style/Font22Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Поищите что-нибудь"
-            android:textAlignment="center" />
-    </LinearLayout>
+    <include
+        android:id="@+id/include_error_block"
+        layout="@layout/include_error_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_container" />
 
     <TextView
         android:id="@+id/search_total_found"
@@ -152,12 +140,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBaseline_toBottomOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/progressBarBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_total_found"
-        >
+        app:layout_constraintTop_toBottomOf="@id/search_total_found">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/vacancy_list"
@@ -170,5 +157,16 @@
             tools:listitem="@layout/vacancy_search_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBarBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/swipe_refresh_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

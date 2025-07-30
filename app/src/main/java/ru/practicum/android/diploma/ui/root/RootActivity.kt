@@ -34,6 +34,7 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController.also {
             it.addOnDestinationChangedListener { controller, destination, arguments ->
                 binding.bottomNavigationView.isVisible = when (destination.id) {
+                    R.id.filterFragment, R.id.vacancyFragment -> false
                     else -> true
                 }
             }
