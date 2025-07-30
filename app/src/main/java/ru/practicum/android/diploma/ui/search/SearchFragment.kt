@@ -202,12 +202,12 @@ class SearchFragment : Fragment() {
 
     // догрузка начата
     private fun showBottomLoading() {
-        // binding.bottomProgressBar.isVisible = true
+        binding.progressBarBottom.isVisible = true
     }
 
     // догрузка завершена
     private fun hideBottomLoading() {
-        // binding.bottomProgressBar.isVisible = false
+        binding.progressBarBottom.isVisible = false
     }
 
     // ничего не нашлось
