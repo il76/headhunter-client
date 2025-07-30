@@ -214,6 +214,7 @@ class SearchFragment : Fragment() {
         binding.vacancyList.isVisible = false
         binding.searchTotalFound.isVisible = false
         binding.includeErrorBlock.errorBlock.isVisible = true
+        binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_start_search)
         binding.includeErrorBlock.searchResultsPlaceholderCaption.text = ""
     }
 
