@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -99,7 +100,8 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
     }
 
     private fun handleSuccess(result: VacancyResult.Success, page: Int, isInitial: Boolean) {
-        val vacancies = result.vacancies ?: emptyList()
+        val vacancies = result.result?.vacancies ?: emptyList()
+        val totalFound = result.result?.found ?: 0
         val canLoadMore = vacancies.size == PAGE_SIZE
 
         _state.update { current ->
@@ -112,6 +114,7 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
                     else -> SearchUIState.SearchStatus.SUCCESS
                 },
                 vacancyList = newVacancies,
+                totalFound = totalFound,
                 pagination = SearchUIState.PaginationState.IDLE,
                 canLoadMore = canLoadMore,
                 isRefreshing = false
@@ -157,7 +160,7 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
     }
 
     private sealed class VacancyResult {
-        data class Success(val vacancies: List<Vacancy>?) : VacancyResult()
+        data class Success(val result: VacancySearchResult?) : VacancyResult()
         data class Error(val exception: Exception) : VacancyResult()
     }
 

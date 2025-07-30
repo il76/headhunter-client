@@ -162,8 +162,7 @@ class SearchFragment : Fragment() {
             SearchUIState.SearchStatus.SUCCESS -> {
                 hideFullscreenLoading()
                 adapter.submitList(state.vacancyList)
-                // Вставить сюда корректное значение из API, пока его нет
-                binding.searchTotalFound.text = getString(R.string.search_total_found, state.vacancyList.count())
+                binding.searchTotalFound.text = getString(R.string.search_total_found, state.totalFound)
             }
             SearchUIState.SearchStatus.ERROR_NET -> {
                 hideFullscreenLoading()

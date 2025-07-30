@@ -5,6 +5,7 @@ import ru.practicum.android.diploma.domain.models.Vacancy
 data class SearchUIState(
     val searchQuery: String = "", // Поисковый запрос
     val vacancyList: List<Vacancy> = emptyList(), // Список найденного
+    val totalFound: Int = 0,
     val status: SearchStatus = SearchStatus.NONE, // Состояние результатов поиска
     val pagination: PaginationState = PaginationState.IDLE, // Состояние пагинации
     val canLoadMore: Boolean = true, // Можно ли загружать ещё

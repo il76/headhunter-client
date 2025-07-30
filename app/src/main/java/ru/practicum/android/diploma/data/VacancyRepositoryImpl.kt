@@ -10,37 +10,41 @@ import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
+import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
 import kotlin.String
 
 class VacancyRepositoryImpl(
     private val networkClient: NetworkClient
 ) : VacancyRepository {
-    override fun search(query: String, page: Int): Flow<Resource<List<Vacancy>>> = flow {
+    override fun search(query: String, page: Int): Flow<Resource<VacancySearchResult>> = flow {
         val response = networkClient.doRequest(VacancySearchRequest(query, page))
         when (response.resultCode) {
             NO_INTERNET -> emit(Resource.Error("Check connection to internet"))
             REQUEST_OK -> {
+                val searchResponse = response as VacancySearchResponse
                 emit(
                     Resource.Success(
-                        (response as VacancySearchResponse).items.map {
-                            Vacancy(
-                                id = it.id,
-                                name = it.name,
-                                logoUrl = it.employer?.logoUrls?.original.toString(),
-                                areaName = it.area?.name ?: "",
-                                employerName = it.employer?.name ?: "",
-                                salaryCurrency = it.salary?.currency ?: "",
-                                salaryFrom = it.salary?.from,
-                                salaryTo = it.salary?.to,
-                            )
-                        }
+                        VacancySearchResult(
+                            vacancies = searchResponse.items.map {
+                                Vacancy(
+                                    id = it.id,
+                                    name = it.name,
+                                    logoUrl = it.employer?.logoUrls?.original.toString(),
+                                    areaName = it.area?.name ?: "",
+                                    employerName = it.employer?.name ?: "",
+                                    salaryCurrency = it.salary?.currency ?: "",
+                                    salaryFrom = it.salary?.from,
+                                    salaryTo = it.salary?.to,
+                                )
+                            },
+                            found = searchResponse.found
+                        )
                     )
                 )
             }
             else -> emit(Resource.Error(response.resultError))
         }
-
     }
 
     override fun getVacancyDetails(vacancyId: String): Flow<VacancyDetailsState> = flow {
