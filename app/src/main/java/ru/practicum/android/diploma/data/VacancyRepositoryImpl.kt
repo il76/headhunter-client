@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.dto.VacancyDetailsRequest
+import ru.practicum.android.diploma.data.dto.VacancyDetailsResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
@@ -10,6 +11,7 @@ import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
 import ru.practicum.android.diploma.util.Resource
+import kotlin.String
 
 class VacancyRepositoryImpl(
     private val networkClient: NetworkClient
@@ -43,6 +45,32 @@ class VacancyRepositoryImpl(
 
     override fun getVacancyDetails(vacancyId: String): Flow<VacancyDetailsState> = flow {
         val response = networkClient.doRequest(VacancyDetailsRequest(vacancyId))
+        when (response.resultCode) {
+            NO_INTERNET -> emit(VacancyDetailsState.ConnectionError)
+            REQUEST_OK -> {
+                emit(VacancyDetailsState.ContentState(
+                    with(response as VacancyDetailsResponse) {
+                        Vacancy(
+                            id = this.id,
+                            name = this.name,
+                            logoUrl = this.employer?.logoUrls?.original.toString(),
+                            areaName = this.area?.name ?: "",
+                            employerName = this.employer?.name ?: "",
+                            salaryCurrency = this.salary?.currency ?: "",
+                            salaryFrom = this.salary?.from,
+                            salaryTo = this.salary?.to,
+                            experience = this.experience?.name ?: "",
+                            employment = this.employment?.name ?: "",
+                            description = this.description,
+                            keySkills = this.keySkills?.map { keySkill ->
+                                keySkill.name
+                            },
+                        )
+                    }
+                ))
+            }
+            else -> emit(VacancyDetailsState.NetworkErrorState(response.resultError))
+        }
     }
 
     companion object {
