@@ -166,14 +166,14 @@ class SearchFragment : Fragment() {
             SearchUIState.SearchStatus.ERROR_NET -> {
                 hideFullscreenLoading()
                 showErrorView()
-                binding.searchResultsPlaceholder.setImageResource(R.drawable.ph_no_internet)
-                binding.searchResultsPlaceholderCaption.setText(R.string.search_no_internet)
+                binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_no_internet)
+                binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_no_internet)
             }
             SearchUIState.SearchStatus.EMPTY_RESULT -> {
                 hideFullscreenLoading()
                 showEmptyView()
-                binding.searchResultsPlaceholder.setImageResource(R.drawable.ph_nothing_found)
-                binding.searchResultsPlaceholderCaption.setText(R.string.search_list_fetch_fail)
+                binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_nothing_found)
+                binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_list_fetch_fail)
             }
             SearchUIState.SearchStatus.NONE -> {
                 showEmptyView()
@@ -186,7 +186,7 @@ class SearchFragment : Fragment() {
     private fun showFullscreenLoading() {
         binding.progressBar.isVisible = true
         binding.vacancyList.isVisible = false
-        binding.errorBlock.isVisible = false
+        binding.includeErrorBlock.errorBlock.isVisible = false
     }
 
     // загрузка завершена
@@ -209,14 +209,14 @@ class SearchFragment : Fragment() {
     // ничего не нашлось
     private fun showEmptyView() {
         binding.vacancyList.isVisible = false
-        binding.errorBlock.isVisible = true
-        binding.searchResultsPlaceholderCaption.text = ""
+        binding.includeErrorBlock.errorBlock.isVisible = true
+        binding.includeErrorBlock.searchResultsPlaceholderCaption.text = ""
     }
 
     // ошибка
     private fun showErrorView() {
         binding.vacancyList.isVisible = false
-        binding.errorBlock.isVisible = true
+        binding.includeErrorBlock.errorBlock.isVisible = true
     }
 
     private fun handlePaginationState(state: SearchUIState) {
