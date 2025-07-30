@@ -82,6 +82,12 @@ class SearchFragment : Fragment() {
         setupSwipeRefresh()
         setupSearchView()
         observeState()
+
+        binding.filterIcon.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_searchFragment_to_filterFragment,
+            )
+        }
     }
 
     // список вакансий
@@ -160,10 +166,14 @@ class SearchFragment : Fragment() {
             SearchUIState.SearchStatus.ERROR_NET -> {
                 hideFullscreenLoading()
                 showErrorView()
+                binding.searchResultsPlaceholder.setImageResource(R.drawable.ph_no_internet)
+                binding.searchResultsPlaceholderCaption.setText(R.string.search_no_internet)
             }
             SearchUIState.SearchStatus.EMPTY_RESULT -> {
                 hideFullscreenLoading()
                 showEmptyView()
+                binding.searchResultsPlaceholder.setImageResource(R.drawable.ph_nothing_found)
+                binding.searchResultsPlaceholderCaption.setText(R.string.search_list_fetch_fail)
             }
             SearchUIState.SearchStatus.NONE -> {
                 showEmptyView()
@@ -200,6 +210,7 @@ class SearchFragment : Fragment() {
     private fun showEmptyView() {
         binding.vacancyList.isVisible = false
         binding.errorBlock.isVisible = true
+        binding.searchResultsPlaceholderCaption.text = ""
     }
 
     // ошибка

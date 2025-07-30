@@ -28,4 +28,8 @@
     <string name="vacancy_conditions">Условия</string>
     <string name="vacancy_skills">Ключевые навыки</string>
 
+    <string name="search_no_internet">Нет интернета</string>
+    <string name="search_list_fetch_fail">Не удалось получить список вакансий</string>
+    <string name="search_no_such_vacancy">Вакансия не найдена или удалена</string>
+
 </resources>

@@ -139,7 +139,8 @@
             style="@style/Font22Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Поищите что-нибудь"
+            android:text=""
+            android:layout_marginHorizontal="46dp"
             android:textAlignment="center" />
     </LinearLayout>
 
