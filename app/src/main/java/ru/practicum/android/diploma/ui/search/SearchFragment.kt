@@ -162,6 +162,8 @@ class SearchFragment : Fragment() {
             SearchUIState.SearchStatus.SUCCESS -> {
                 hideFullscreenLoading()
                 adapter.submitList(state.vacancyList)
+                // Вставить сюда корректное значение из API, пока его нет
+                binding.searchTotalFound.text = getString(R.string.search_total_found, state.vacancyList.count())
             }
             SearchUIState.SearchStatus.ERROR_NET -> {
                 hideFullscreenLoading()
@@ -187,12 +189,14 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = true
         binding.vacancyList.isVisible = false
         binding.includeErrorBlock.errorBlock.isVisible = false
+        binding.searchTotalFound.isVisible = false
     }
 
     // загрузка завершена
     private fun hideFullscreenLoading() {
         binding.progressBar.isVisible = false
         binding.vacancyList.isVisible = true
+        binding.searchTotalFound.isVisible = true
         // binding.errorBlock.isVisible = false
     }
 
@@ -209,6 +213,7 @@ class SearchFragment : Fragment() {
     // ничего не нашлось
     private fun showEmptyView() {
         binding.vacancyList.isVisible = false
+        binding.searchTotalFound.isVisible = false
         binding.includeErrorBlock.errorBlock.isVisible = true
         binding.includeErrorBlock.searchResultsPlaceholderCaption.text = ""
     }
@@ -216,6 +221,7 @@ class SearchFragment : Fragment() {
     // ошибка
     private fun showErrorView() {
         binding.vacancyList.isVisible = false
+        binding.searchTotalFound.isVisible = false
         binding.includeErrorBlock.errorBlock.isVisible = true
     }
 
