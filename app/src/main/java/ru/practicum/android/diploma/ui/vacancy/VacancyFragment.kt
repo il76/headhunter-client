@@ -44,10 +44,10 @@ class VacancyFragment : Fragment() {
         viewModel.screenState.observe(viewLifecycleOwner) { screenState ->
             when (screenState) {
                 is VacancyDetailsState.ContentState -> showContent(screenState)
-                VacancyDetailsState.ConnectionError -> TODO()
+                VacancyDetailsState.ConnectionError -> showErrorVacancyNotFound()
                 VacancyDetailsState.EmptyState -> TODO()
                 VacancyDetailsState.LoadingState -> showLoading()
-                VacancyDetailsState.ServerError -> TODO()
+                VacancyDetailsState.ServerError -> showErrorServer()
                 is VacancyDetailsState.NetworkErrorState -> TODO()
             }
         }
@@ -59,7 +59,12 @@ class VacancyFragment : Fragment() {
 
         binding.jobTitle.text = vacancyFull.name
         binding.salary.text =
-            Converter.formatSalaryString(vacancyFull.salaryFrom, vacancyFull.salaryTo, vacancyFull.currency, requireContext())
+            Converter.formatSalaryString(
+                vacancyFull.salaryFrom,
+                vacancyFull.salaryTo,
+                vacancyFull.currency,
+                requireContext()
+            )
         binding.companyName.text = vacancyFull.company
         binding.descTitle.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
 

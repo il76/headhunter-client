@@ -11,9 +11,11 @@ class VacancyViewModel : ViewModel() {
     val screenState: LiveData<VacancyDetailsState> = _screenState
     private var id = -1
 
-    fun loadVacancy(vacancyId: Int): Unit {
+    fun loadVacancy(vacancyId: Int): VacancyFull {
         id = vacancyId
-        _screenState.value = VacancyDetailsState.ContentState(mockVacancy)
+        val vacancy = mockVacancy
+        _screenState.value = VacancyDetailsState.ContentState(vacancy)
+        return vacancy
     }
 
     val mockVacancy = VacancyFull(
@@ -21,7 +23,7 @@ class VacancyViewModel : ViewModel() {
         name = "Android-разработчик",
         company = "Еда",
         currency = "₽",
-        salaryFrom = 100000,
+        salaryFrom = 100_000,
         salaryTo = null,
         area = "Москва",
         alternateUrl = "https://hh.ru/vacancy/8331228",
@@ -29,12 +31,12 @@ class VacancyViewModel : ViewModel() {
         employment = "Полная занятость, Удаленная работа",
         experience = "От 1 года до 3 лет",
         schedule = "",
-        description = "<h3>Обязанности</h3><ul><li>Разрабатывать новую функциональность приложения</li><li>Помогать с интеграцией нашего SDK в другие приложения</li><li>Проектировать большие новые модули</li><li>Писать UI- и unit-тесты</li><li>Следить за работоспособностью\n",
+        description = "<h3>Обязанности</h3><ul><li>Разрабатывать новую функциональность приложения</li></ul>",
         contact = "",
         email = "",
         phone = "",
         comment = "",
-        keySkills = "Знание классических алгоритмов и структуры данных, Программирование для Android больше одного года, Знание WebRTC",
+        keySkills = "Знание классических алгоритмов и структуры данных",
         address = ""
     )
 }
