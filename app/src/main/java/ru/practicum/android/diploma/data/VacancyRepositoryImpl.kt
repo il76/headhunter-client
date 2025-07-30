@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
+import ru.practicum.android.diploma.domain.models.VacancyFull
 import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
 import kotlin.String
@@ -54,21 +55,19 @@ class VacancyRepositoryImpl(
             REQUEST_OK -> {
                 emit(VacancyDetailsState.ContentState(
                     with(response as VacancyDetailsResponse) {
-                        Vacancy(
-                            id = this.id,
+                        VacancyFull(
+                            id = this.id.toInt(),
                             name = this.name,
-                            logoUrl = this.employer?.logoUrls?.original.toString(),
-                            areaName = this.area?.name ?: "",
-                            employerName = this.employer?.name ?: "",
-                            salaryCurrency = this.salary?.currency ?: "",
-                            salaryFrom = this.salary?.from,
+                            icon = this.employer?.logoUrls?.original.toString(),
+                            area = this.area?.name ?: "",
+                            employment = this.employer?.name ?: "",
                             salaryTo = this.salary?.to,
+                            salaryFrom = this.salary?.from,
                             experience = this.experience?.name ?: "",
-                            employment = this.employment?.name ?: "",
-                            description = this.description,
+                            description = this.description ?: "",
                             keySkills = this.keySkills?.map { keySkill ->
                                 keySkill.name
-                            },
+                            }.toString(),
                         )
                     }
                 ))
