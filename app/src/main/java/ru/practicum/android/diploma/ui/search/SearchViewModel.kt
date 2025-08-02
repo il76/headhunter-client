@@ -59,7 +59,8 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
     // Подгрузка следующей страницы (при скролле)
     fun loadNextPage() {
         if (!_state.value.canLoadMore ||
-            _state.value.pagination is SearchUIState.PaginationState.LOADING) {
+            _state.value.pagination is SearchUIState.PaginationState.LOADING
+        ) {
             return
         }
 
@@ -89,7 +90,9 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
             repository.search(_state.value.searchQuery, page).first()
         } catch (e: CancellationException) {
             throw e
-        } catch (e: Exception) {
+        } catch (e: IOException) {
+            Result.failure(e)
+        } catch (e: IllegalStateException) {
             Result.failure(e)
         }
     }
@@ -116,7 +119,6 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
             )
         }
     }
-
 
     private fun handleError(exception: Exception, isInitial: Boolean) {
         _state.update {
