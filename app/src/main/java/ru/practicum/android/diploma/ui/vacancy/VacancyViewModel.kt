@@ -32,10 +32,6 @@ class VacancyViewModel : ViewModel() {
         experience = "От 1 года до 3 лет",
         schedule = "",
         description = "<h3>Обязанности</h3><ul><li>Разрабатывать новую функциональность приложения</li></ul>",
-        contact = "",
-        email = "",
-        phone = "",
-        comment = "",
         keySkills = "Знание классических алгоритмов и структуры данных",
         address = ""
     )
