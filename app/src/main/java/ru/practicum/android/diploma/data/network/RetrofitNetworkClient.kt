@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.data.network
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import ru.practicum.android.diploma.data.dto.IndustriesRequest
 import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacancyDetailsRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
@@ -28,6 +29,16 @@ class RetrofitNetworkClient(
                 is VacancyDetailsRequest -> {
                     val response = withContext(Dispatchers.IO) {
                         hhService.getVacancyDetails(dto.vacancyId)
+                    }
+                    response.apply {
+                        resultCode = HTTP_SUCCESS_CODE
+                        resultError = ""
+                    }
+                }
+
+                is IndustriesRequest -> {
+                    val response = withContext(Dispatchers.IO) {
+                        hhService.getIndustries()
                     }
                     response.apply {
                         resultCode = HTTP_SUCCESS_CODE
