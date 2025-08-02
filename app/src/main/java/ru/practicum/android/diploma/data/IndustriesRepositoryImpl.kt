@@ -14,7 +14,7 @@ import ru.practicum.android.diploma.util.Resource
 
 class IndustriesRepositoryImpl(
     private val networkClient: NetworkClient
-) : IndustriesRepository  {
+) : IndustriesRepository {
     override fun getIndustries(): Flow<Resource<IndustrySearchResult>> = flow {
         val response = networkClient.doRequest(IndustriesRequest())
         when (response.resultCode) {
