@@ -78,30 +78,25 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
 
     private fun loadData(page: Int, isInitial: Boolean) {
         viewModelScope.launch {
-            when (val result = loadVacancies(page)) {
-                is VacancyResult.Success -> handleSuccess(result, page, isInitial)
-                is VacancyResult.Error -> handleError(result.exception, isInitial)
-            }
+            loadVacancies(page)
+                .onSuccess { handleSuccess(it, page, isInitial) }
+                .onFailure { handleError(it as Exception, isInitial) }
         }
     }
 
-    private suspend fun loadVacancies(page: Int): VacancyResult {
+    private suspend fun loadVacancies(page: Int): Result<VacancySearchResult> {
         return try {
-            val vacancies = repository.search(_state.value.searchQuery, page).first()
-            VacancyResult.Success(vacancies.data)
-        } catch (e: IOException) {
-            VacancyResult.Error(e)
+            repository.search(_state.value.searchQuery, page).first()
         } catch (e: CancellationException) {
-            throw e // Пробрасываем корутиновые отмены
-// опять detekt!
-//        } catch (e: Exception) {
-//            VacancyResult.Error(IOException("Network error", e))
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
-    private fun handleSuccess(result: VacancyResult.Success, page: Int, isInitial: Boolean) {
-        val vacancies = result.result?.vacancies ?: emptyList()
-        val totalFound = result.result?.found ?: 0
+    private fun handleSuccess(result: VacancySearchResult, page: Int, isInitial: Boolean) {
+        val vacancies = result.vacancies
+        val totalFound = result.found
         val canLoadMore = vacancies.size == PAGE_SIZE
 
         _state.update { current ->
@@ -121,6 +116,7 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
             )
         }
     }
+
 
     private fun handleError(exception: Exception, isInitial: Boolean) {
         _state.update {
@@ -157,11 +153,6 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
                 )
             }
         }
-    }
-
-    private sealed class VacancyResult {
-        data class Success(val result: VacancySearchResult?) : VacancyResult()
-        data class Error(val exception: Exception) : VacancyResult()
     }
 
     companion object {

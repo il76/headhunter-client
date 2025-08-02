@@ -107,7 +107,7 @@ class VacancyFragment : Fragment() {
         }
     }
 
-    private fun showLogo(image: String) {
+    private fun showLogo(image: String?) {
         Glide.with(requireActivity())
             .load(image)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
