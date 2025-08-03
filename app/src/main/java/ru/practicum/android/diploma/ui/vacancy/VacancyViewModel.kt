@@ -3,16 +3,27 @@ package ru.practicum.android.diploma.ui.vacancy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
+import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
 import ru.practicum.android.diploma.domain.models.VacancyFull
 
-class VacancyViewModel : ViewModel() {
+class VacancyViewModel(
+    private val networkRepository: VacancyRepository,
+    private val localRepository: VacancyLocalRepository
+) : ViewModel() {
     private val _screenState = MutableLiveData<VacancyDetailsState>(VacancyDetailsState.LoadingState)
     val screenState: LiveData<VacancyDetailsState> = _screenState
     private var id = -1
 
-    fun loadVacancy(vacancyId: Int): VacancyFull {
+    fun loadVacancy(vacancyId: Int, useDB: Boolean = false): VacancyFull {
         id = vacancyId
+// Исправить на этот вариант
+//        val vacancy = if (useDB) {
+//            localRepository.getVacancyDetails(id.toString())
+//        } else {
+//            networkRepository.getVacancyDetails(vacancyId.toString())
+//        }
         val vacancy = mockVacancy
         _screenState.value = VacancyDetailsState.ContentState(vacancy)
         return vacancy

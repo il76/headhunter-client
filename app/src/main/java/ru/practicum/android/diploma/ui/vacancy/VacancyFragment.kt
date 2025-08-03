@@ -31,7 +31,8 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val vacancyId = arguments?.getInt(VACANCY_ID, 0) ?: 0
-        viewModel.loadVacancy(vacancyId)
+        val useDB = arguments?.getBoolean(ARG_USE_LOCAL_DB) ?: false
+        viewModel.loadVacancy(vacancyId, useDB)
         initializeObservers()
     }
 
@@ -139,6 +140,11 @@ class VacancyFragment : Fragment() {
 
     companion object {
         private const val VACANCY_ID = "VACANCY_ID"
-        fun createArguments(vacancyId: Int): Bundle = bundleOf(VACANCY_ID to vacancyId)
+        private const val ARG_USE_LOCAL_DB = "ARG_USE_LOCAL_DB"  //
+
+        fun createArguments(vacancyId: Int, fromDB: Boolean = false): Bundle = bundleOf(
+            VACANCY_ID to vacancyId,
+            ARG_USE_LOCAL_DB to fromDB
+        )
     }
 }

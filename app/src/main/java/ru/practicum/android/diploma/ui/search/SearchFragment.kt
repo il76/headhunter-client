@@ -105,7 +105,8 @@ class SearchFragment : Fragment() {
             }
         )
 
-        adapter.submitList(viewModel.vacancyList)
+        adapter.submitList(emptyList<Vacancy>())
+
         // обработка пагинации
         binding.vacancyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
