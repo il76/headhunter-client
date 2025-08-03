@@ -9,5 +9,6 @@ data class VacancyDetailsResponse(
     val experience: Experience?,
     val employment: Employment?,
     val description: String?,
-    val keySkills: List<KeySkill>?
+    val keySkills: List<KeySkill>?,
+    val alternateUrl: String?
 ) : Response()

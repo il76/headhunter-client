@@ -16,9 +16,7 @@ class RetrofitNetworkClient(
         return try {
             when (dto) {
                 is VacancySearchRequest -> {
-                    val response = withContext(Dispatchers.IO) {
-                        hhService.getVacancies(dto.text, dto.page.toString())
-                    }
+                    val response = hhService.getVacancies(dto.text, dto.page.toString())
                     response.apply {
                         resultCode = HTTP_SUCCESS_CODE
                         resultError = ""
@@ -26,9 +24,7 @@ class RetrofitNetworkClient(
                 }
 
                 is VacancyDetailsRequest -> {
-                    val response = withContext(Dispatchers.IO) {
-                        hhService.getVacancyDetails(dto.vacancyId)
-                    }
+                    val response = hhService.getVacancyDetails(dto.vacancyId)
                     response.apply {
                         resultCode = HTTP_SUCCESS_CODE
                         resultError = ""

@@ -19,9 +19,9 @@
     <string name="search_hint">Введите запрос</string>
 
     <string name="empty_salary">Зарплата не указана</string>
-    <string name="salary_from">от %1$s %2$s</string>
-    <string name="salary_to">до %1$s %2$s</string>
-    <string name="salary_from_to">от %1$s до %2$s %3$s</string>
+    <string name="salary_from">от %1$d %2$s</string>
+    <string name="salary_to">до %1$d %2$s</string>
+    <string name="salary_from_to">от %1$d %2$s до %3$d %4$s</string>
 
     <!--  Экран Описание вакансии  /-->
     <string name="vacancy_header">Вакансия</string>
