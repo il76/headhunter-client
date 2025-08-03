@@ -14,42 +14,23 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
 
     override suspend fun doRequest(dto: Any): Response {
+        return when (dto) {
+            is VacancySearchRequest -> makeRequest { hhService.getVacancies(dto.text, dto.page.toString()) }
+            is VacancyDetailsRequest -> makeRequest { hhService.getVacancyDetails(dto.vacancyId) }
+            is IndustriesRequest -> makeRequest { hhService.getIndustries() }
+            else -> Response().apply {
+                resultCode = BAD_REQUEST_CODE
+                resultError = "Invalid request type"
+            }
+        }
+    }
+
+    private suspend fun makeRequest(apiCall: suspend () -> Response): Response {
         return try {
-            when (dto) {
-                is VacancySearchRequest -> {
-                    val response = withContext(Dispatchers.IO) {
-                        hhService.getVacancies(dto.text, dto.page.toString())
-                    }
-                    response.apply {
-                        resultCode = HTTP_SUCCESS_CODE
-                        resultError = ""
-                    }
-                }
-
-                is VacancyDetailsRequest -> {
-                    val response = withContext(Dispatchers.IO) {
-                        hhService.getVacancyDetails(dto.vacancyId)
-                    }
-                    response.apply {
-                        resultCode = HTTP_SUCCESS_CODE
-                        resultError = ""
-                    }
-                }
-
-                is IndustriesRequest -> {
-                    val response = withContext(Dispatchers.IO) {
-                        hhService.getIndustries()
-                    }
-                    response.apply {
-                        resultCode = HTTP_SUCCESS_CODE
-                        resultError = ""
-                    }
-                }
-
-                else -> return Response().apply {
-                    resultCode = BAD_REQUEST_CODE
-                    resultError = "Invalid request type"
-                }
+            val data = withContext(Dispatchers.IO) { apiCall() }
+            data.apply {
+                resultCode = HTTP_SUCCESS_CODE
+                resultError = ""
             }
         } catch (e: IOException) {
             Response().apply {
@@ -59,18 +40,9 @@ class RetrofitNetworkClient(
         } catch (e: HttpException) {
             Response().apply {
                 resultCode = e.code()
-                resultError = "HTTP error: ${e.message}"
+                resultError = "HTTP error: ${e.message()}"
             }
         }
-
-// detekt не пропускает этот блок! И как ловить неопределённые исключения?
-// пока оставлю этот комментарий до момента фактической реализации
-//        } catch (e: Exception) {
-//            Response().apply {
-//                resultCode = SERVER_ERROR_CODE
-//                resultError = "Unexpected error: ${e.localizedMessage}"
-//            }
-//        }
     }
 
     companion object {
