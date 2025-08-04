@@ -6,31 +6,142 @@
     android:layout_height="match_parent"
     android:background="@color/white_day_black_night">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbarlayout"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_border"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/margin_16" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_border"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/margin_16" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:buttonGravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/filter_settings"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:titleTextAppearance="@style/Font22Medium"
+        app:titleTextColor="@color/black_day_white_night" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white_day_black_night"
-            android:paddingHorizontal="16dp"
-            app:navigationIcon="@drawable/ic_arrow_back">
+    <include
+        android:id="@+id/industryContainer"
+        layout="@layout/filter_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/left_border"
+        app:layout_constraintEnd_toEndOf="@id/right_border"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
 
-            <TextView
-                style="@style/Font22Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/filter_settings"
-                android:textColor="@color/black_day_white_night" />
+    <ImageView
+        android:id="@+id/editSalaryBackground"
+        android:layout_width="0dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="@dimen/margin_24"
+        android:background="@drawable/filter_sum_background"
+        app:layout_constraintEnd_toEndOf="@id/right_border"
+        app:layout_constraintStart_toStartOf="@id/left_border"
+        app:layout_constraintTop_toBottomOf="@+id/industryContainer" />
 
-        </com.google.android.material.appbar.MaterialToolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+    <EditText
+        android:id="@+id/salaryEditText"
+        android:textAppearance="@style/Font16Regular"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_24"
+        android:layout_marginStart="@dimen/margin_16"
+        android:hint="@string/filter_hint"
+        android:inputType="number"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:background="@drawable/filter_sum_background"
+        android:textColorHint="@color/gray"
+        android:textCursorDrawable="@drawable/editview_cursor"
+        app:layout_constraintEnd_toEndOf="@id/right_border"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/left_border"
+        app:layout_constraintTop_toTopOf="@+id/editSalaryBackground" />
+
+    <TextView
+        android:id="@+id/salaryHint"
+        android:textAppearance="@style/Font12Regular"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:text="@string/filter_salary"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/salaryEditText"
+        app:layout_constraintStart_toStartOf="@+id/left_border" />
+
+    <ImageView
+        android:id="@+id/clearSalary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:src="@drawable/ic_clear"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/editSalaryBackground"
+        app:layout_constraintEnd_toStartOf="@+id/right_border"
+        app:layout_constraintTop_toTopOf="@id/editSalaryBackground" />
+
+    <TextView
+        android:id="@+id/withoutSalary"
+        android:textAppearance="@style/Font16Regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/filter_not_show"
+        android:textColor="@color/black_day_white_night"
+        app:layout_constraintStart_toStartOf="@+id/left_border"
+        app:layout_constraintTop_toBottomOf="@+id/salaryEditText" />
+
+    <CheckBox
+        android:id="@+id/salaryCheckbox"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:backgroundTint="@color/blue"
+        android:buttonTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="@+id/withoutSalary"
+        app:layout_constraintEnd_toStartOf="@id/right_border"
+        app:layout_constraintTop_toTopOf="@+id/withoutSalary"/>
+
+    <TextView
+        android:id="@+id/btnApplyFilter"
+        android:textAppearance="@style/Font16Medium"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/filter_apply"
+        android:textColor="@color/white"
+        android:background="@drawable/blue_rounded_bg"
+        app:layout_constraintBottom_toTopOf="@+id/btnResetFilter"
+        app:layout_constraintEnd_toStartOf="@+id/right_border"
+        app:layout_constraintStart_toStartOf="@+id/left_border" />
+
+    <TextView
+        android:id="@+id/btnResetFilter"
+        android:textAppearance="@style/Font16Medium"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="@dimen/margin_24"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/filter_reset"
+        android:textColor="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/right_border"
+        app:layout_constraintStart_toStartOf="@+id/left_border" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
