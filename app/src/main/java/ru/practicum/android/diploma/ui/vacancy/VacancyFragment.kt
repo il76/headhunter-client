@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
@@ -32,8 +34,10 @@ class VacancyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val vacancyId = arguments?.getInt(VACANCY_ID, 0) ?: 0
         val useDB = arguments?.getBoolean(ARG_USE_LOCAL_DB) ?: false
-        viewModel.loadVacancy(vacancyId, useDB)
         initializeObservers()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.loadVacancy(vacancyId, useDB)
+        }
     }
 
     override fun onDestroyView() {
@@ -56,6 +60,7 @@ class VacancyFragment : Fragment() {
 
     private fun showContent(screenState: VacancyDetailsState.ContentState) {
         val vacancyFull = screenState.vacancy
+        binding.container.isVisible = true
         binding.progressBar.isVisible = false
 
         binding.jobTitle.text = vacancyFull.name
@@ -63,14 +68,14 @@ class VacancyFragment : Fragment() {
             Converter.formatSalaryString(
                 vacancyFull.salaryFrom,
                 vacancyFull.salaryTo,
-                vacancyFull.currency,
+                vacancyFull.salaryCurrency,
                 requireContext()
             )
-        binding.companyName.text = vacancyFull.company
+        binding.companyName.text = vacancyFull.employerName
         binding.descTitle.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
 
         showExperience(vacancyFull.experience)
-        showLogo(vacancyFull.icon)
+        showLogo(vacancyFull.logoUrl)
         showKeySkills(vacancyFull.keySkills)
         showEmploymentAndSchedule(vacancyFull.employment, vacancyFull.schedule)
     }
@@ -88,9 +93,16 @@ class VacancyFragment : Fragment() {
         binding.container.isVisible = false
     }
 
-    private fun showKeySkills(keySkills: String) {
-        if (keySkills.isNotEmpty()) {
-            binding.skillsText.text = Html.fromHtml(keySkills, Html.FROM_HTML_MODE_COMPACT)
+    private fun showKeySkills(keySkills: List<String>?) {
+        if (!keySkills.isNullOrEmpty()) {
+            val htmlString = buildString {
+                append("<ul>")
+                keySkills.forEach { skill ->
+                    append("<li>$skill</li>")
+                }
+                append("</ul>")
+            }
+            binding.skillsText.text = Html.fromHtml(htmlString, Html.FROM_HTML_MODE_COMPACT)
             binding.skillsText.isVisible = true
             binding.skillsTitle.isVisible = true
         } else {
@@ -99,8 +111,8 @@ class VacancyFragment : Fragment() {
         }
     }
 
-    private fun showExperience(experience: String) {
-        if (experience.isNotEmpty()) {
+    private fun showExperience(experience: String?) {
+        if (!experience.isNullOrEmpty()) {
             binding.experienceTitle.isVisible = true
             binding.experienceText.text = experience
         } else {
@@ -119,16 +131,16 @@ class VacancyFragment : Fragment() {
         binding.companyLogo.clipToOutline = true
     }
 
-    private fun showEmploymentAndSchedule(employment: String, schedule: String) {
-        if (employment.isEmpty()) {
-            if (schedule.isEmpty()) {
+    private fun showEmploymentAndSchedule(employment: String?, schedule: String?) {
+        if (employment.isNullOrEmpty()) {
+            if (schedule.isNullOrEmpty()) {
                 binding.employmentText.isVisible = false
             } else {
                 binding.employmentText.isVisible = true
                 binding.employmentText.text = schedule
             }
         } else {
-            if (schedule.isEmpty()) {
+            if (schedule.isNullOrEmpty()) {
                 binding.employmentText.isVisible = true
                 binding.employmentText.text = employment
             } else {
@@ -140,7 +152,7 @@ class VacancyFragment : Fragment() {
 
     companion object {
         private const val VACANCY_ID = "VACANCY_ID"
-        private const val ARG_USE_LOCAL_DB = "ARG_USE_LOCAL_DB"  //
+        private const val ARG_USE_LOCAL_DB = "ARG_USE_LOCAL_DB"
 
         fun createArguments(vacancyId: Int, fromDB: Boolean = false): Bundle = bundleOf(
             VACANCY_ID to vacancyId,

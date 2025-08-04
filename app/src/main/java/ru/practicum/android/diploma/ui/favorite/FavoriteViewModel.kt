@@ -66,7 +66,7 @@ class FavoriteViewModel(private val repository: VacancyLocalRepository) : ViewMo
     private fun handleError(exception: Exception) {
         _state.update {
             it.copy(status = FavoriteUIState.FavoriteStatus.ERROR)
-         }
+        }
     }
 
     private sealed class VacancyResult {
