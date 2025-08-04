@@ -44,6 +44,11 @@ class VacancyFragment : Fragment() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
+        binding.favButton.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.favoriteAction()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -61,6 +66,15 @@ class VacancyFragment : Fragment() {
                 VacancyDetailsState.ServerError -> showErrorServer()
                 is VacancyDetailsState.NetworkErrorState -> TODO()
             }
+        }
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            binding.favButton.setImageResource(
+                if (isFavorite) {
+                    R.drawable.ic_favorite_active
+                } else {
+                    R.drawable.ic_favorite
+                }
+            )
         }
     }
 

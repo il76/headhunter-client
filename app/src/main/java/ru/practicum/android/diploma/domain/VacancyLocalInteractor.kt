@@ -6,6 +6,8 @@ import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
 
 interface VacancyLocalInteractor {
-    fun getAll(): Flow<Resource<VacancySearchResult>>
-    fun getVacancyDetails(vacancyId: String): Flow<Resource<Vacancy>>
+    suspend fun getAll(): Flow<Resource<VacancySearchResult>>
+    suspend fun getVacancyDetails(vacancyId: String): Flow<Resource<Vacancy>>
+    suspend fun saveVacancy(vacancy: Vacancy)
+    suspend fun deleteVacancy(vacancyId: String)
 }
