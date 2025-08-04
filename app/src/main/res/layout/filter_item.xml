@@ -14,26 +14,36 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/tvHint"
+            android:id="@+id/upperHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hint"
+            android:text="Отрасль"
             android:visibility="gone"
             android:textColor="@color/black_day_white_night"
             android:textAppearance="@style/Font12Regular"/>
 
         <TextView
-            android:id="@+id/tvValue"
+            android:id="@+id/hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Value"
+            android:text="Отрасль"
+            android:visibility="visible"
             android:textColor="@color/gray"
+            android:textAppearance="@style/Font16Regular"/>
+
+        <TextView
+            android:id="@+id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Отрасль"
+            android:visibility="gone"
+            android:textColor="@color/black_day_white_night"
             android:textAppearance="@style/Font16Regular"/>
 
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/ivElementButton"
+        android:id="@+id/elementButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_arrow_forward"
@@ -43,7 +53,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/ivClearElementButton"
+        android:id="@+id/clearElementButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_clear"

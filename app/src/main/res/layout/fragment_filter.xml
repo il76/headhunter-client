@@ -34,7 +34,7 @@
         app:titleTextColor="@color/black_day_white_night" />
 
     <include
-        android:id="@+id/clIndustryValue"
+        android:id="@+id/industryContainer"
         layout="@layout/filter_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -43,17 +43,17 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"/>
 
     <ImageView
-        android:id="@+id/ivEditSalaryBackground"
+        android:id="@+id/editSalaryBackground"
         android:layout_width="0dp"
         android:layout_height="51dp"
         android:layout_marginTop="@dimen/margin_24"
         android:background="@drawable/filter_sum_background"
         app:layout_constraintEnd_toEndOf="@id/right_border"
         app:layout_constraintStart_toStartOf="@id/left_border"
-        app:layout_constraintTop_toBottomOf="@+id/clIndustryValue" />
+        app:layout_constraintTop_toBottomOf="@+id/industryContainer" />
 
     <EditText
-        android:id="@+id/etSalaryEditText"
+        android:id="@+id/salaryEditText"
         android:textAppearance="@style/Font16Regular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -70,32 +70,32 @@
         app:layout_constraintEnd_toEndOf="@id/right_border"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/left_border"
-        app:layout_constraintTop_toTopOf="@+id/ivEditSalaryBackground" />
+        app:layout_constraintTop_toTopOf="@+id/editSalaryBackground" />
 
     <TextView
-        android:id="@+id/tvSalaryHint"
+        android:id="@+id/salaryHint"
         android:textAppearance="@style/Font12Regular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_16"
         android:text="@string/filter_salary"
         android:textColor="@color/gray"
-        app:layout_constraintBottom_toTopOf="@+id/etSalaryEditText"
+        app:layout_constraintBottom_toTopOf="@+id/salaryEditText"
         app:layout_constraintStart_toStartOf="@+id/left_border" />
 
     <ImageView
-        android:id="@+id/ivClearSalary"
+        android:id="@+id/clearSalary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_16"
         android:src="@drawable/ic_clear"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/ivEditSalaryBackground"
-        app:layout_constraintS_toStartOf="@+id/etSalaryEditText"
-        app:layout_constraintTop_toTopOf="@id/ivEditSalaryBackground" />
+        app:layout_constraintBottom_toBottomOf="@id/editSalaryBackground"
+        app:layout_constraintEnd_toStartOf="@+id/right_border"
+        app:layout_constraintTop_toTopOf="@id/editSalaryBackground" />
 
     <TextView
-        android:id="@+id/tvWithoutSalary"
+        android:id="@+id/withoutSalary"
         android:textAppearance="@style/Font16Regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -103,17 +103,17 @@
         android:text="@string/filter_not_show"
         android:textColor="@color/black_day_white_night"
         app:layout_constraintStart_toStartOf="@+id/left_border"
-        app:layout_constraintTop_toBottomOf="@+id/etSalaryEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/salaryEditText" />
 
     <CheckBox
-        android:id="@+id/ckbSalaryCheckbox"
+        android:id="@+id/salaryCheckbox"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:backgroundTint="@color/blue"
         android:buttonTint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="@+id/tvWithoutSalary"
+        app:layout_constraintBottom_toBottomOf="@+id/withoutSalary"
         app:layout_constraintEnd_toStartOf="@id/right_border"
-        app:layout_constraintTop_toTopOf="@+id/tvWithoutSalary"/>
+        app:layout_constraintTop_toTopOf="@+id/withoutSalary"/>
 
     <TextView
         android:id="@+id/btnApplyFilter"
@@ -122,7 +122,7 @@
         android:layout_height="60dp"
         android:layout_marginBottom="@dimen/margin_8"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:text="@string/filter_apply"
         android:textColor="@color/white"
         android:background="@drawable/blue_rounded_bg"
@@ -137,7 +137,7 @@
         android:layout_height="60dp"
         android:layout_marginBottom="@dimen/margin_24"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:text="@string/filter_reset"
         android:textColor="@color/red"
         app:layout_constraintBottom_toBottomOf="parent"
