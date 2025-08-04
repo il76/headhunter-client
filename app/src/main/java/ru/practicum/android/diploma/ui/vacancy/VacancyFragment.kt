@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.launch
@@ -37,6 +38,9 @@ class VacancyFragment : Fragment() {
         initializeObservers()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.loadVacancy(vacancyId, useDB)
+        }
+        binding.backButton.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 
