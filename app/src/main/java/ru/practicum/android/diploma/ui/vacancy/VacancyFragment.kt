@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.ui.vacancy
 
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,9 +98,9 @@ class VacancyFragment : Fragment() {
         showKeySkills(vacancyFull.keySkills)
         showEmploymentAndSchedule(vacancyFull.employment, vacancyFull.schedule)
         showContacts(vacancyFull.contacts?.email, vacancyFull.contacts?.phones)
-        Log.i("hhc", vacancyFull.contacts.toString())
         binding.shareButton.setOnClickListener {
-            viewModel.shareVacancy(vacancyFull.logoUrl) // fix to real url
+            // возможно нужно использовать поле из ответа? Но пока у нас его нет
+            viewModel.shareVacancy("https://hh.ru/vacancy/${vacancyFull.id}")
         }
     }
 
