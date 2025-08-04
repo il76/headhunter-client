@@ -82,6 +82,9 @@ class VacancyFragment : Fragment() {
         showLogo(vacancyFull.logoUrl)
         showKeySkills(vacancyFull.keySkills)
         showEmploymentAndSchedule(vacancyFull.employment, vacancyFull.schedule)
+        binding.shareButton.setOnClickListener {
+            viewModel.shareVacancy(vacancyFull.logoUrl) // fix to real url
+        }
     }
 
     private fun showErrorVacancyNotFound() {

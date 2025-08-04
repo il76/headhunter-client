@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import ru.practicum.android.diploma.domain.api.SharingInteractor
 import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -13,7 +14,8 @@ import ru.practicum.android.diploma.util.Resource
 
 class VacancyViewModel(
     private val networkRepository: VacancyRepository,
-    private val localRepository: VacancyLocalRepository
+    private val localRepository: VacancyLocalRepository,
+    private val sharingInteractor: SharingInteractor,
 ) : ViewModel() {
     private val _screenState = MutableLiveData<VacancyDetailsState>(VacancyDetailsState.LoadingState)
     val screenState: LiveData<VacancyDetailsState> = _screenState
@@ -48,6 +50,10 @@ class VacancyViewModel(
                 else -> VacancyErrorException("Unknown error")
             }
         }
+    }
+
+    fun shareVacancy(url: String) {
+        sharingInteractor.share(url)
     }
 }
 

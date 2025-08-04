@@ -28,7 +28,8 @@ val viewModelModule = module {
     viewModel {
         VacancyViewModel(
             networkRepository = get(),
-            localRepository = get()
+            localRepository = get(),
+            sharingInteractor = get(),
         )
     }
 }
