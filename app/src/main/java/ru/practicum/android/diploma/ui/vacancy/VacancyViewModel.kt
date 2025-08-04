@@ -33,17 +33,22 @@ class VacancyViewModel(
             networkRepository.getVacancyDetails(vacancyId.toString())
         }
 
-        val state = vacancyFlow.first() // Получаем первый эмиттированный стейт
+        val state = vacancyFlow.first()
         return when (state) {
             is VacancyDetailsState.ContentState -> {
                 _screenState.value = state
                 state.vacancy
             }
-            is VacancyDetailsState.EmptyState, null -> throw Exception("Vacancy not found")
-            is VacancyDetailsState.NetworkErrorState -> throw Exception(state.message)
-            is VacancyDetailsState.ServerError -> throw Exception("Server error")
-            is VacancyDetailsState.ConnectionError -> throw Exception("No internet")
-            VacancyDetailsState.LoadingState -> throw Exception("Unexpected loading state")
+            else -> throw when (state) {
+                is VacancyDetailsState.EmptyState -> VacancyErrorException("Vacancy not found")
+                is VacancyDetailsState.NetworkErrorState -> VacancyErrorException(state.message)
+                is VacancyDetailsState.ServerError -> VacancyErrorException("Server error")
+                is VacancyDetailsState.ConnectionError -> VacancyErrorException("No internet")
+                VacancyDetailsState.LoadingState -> VacancyErrorException("Unexpected loading state")
+                else -> VacancyErrorException("Unknown error")
+            }
         }
     }
 }
+
+class VacancyErrorException(message: String) : Exception(message)
