@@ -14,7 +14,6 @@
     <string name="team_first">Илья</string>
     <string name="team_second">Андрей</string>
     <string name="team_third">Марат</string>
-    <string name="filter_settings">Настройки фильтрации</string>
     <string name="title_search">Поиск вакансий</string>
     <string name="search_hint">Введите запрос</string>
 
@@ -36,5 +35,13 @@
     <string name="search_list_fetch_fail">Не удалось получить список вакансий</string>
     <string name="search_no_such_vacancy">Вакансия не найдена или удалена</string>
     <string name="search_total_found">Найдено %d вакансий</string>
+
+    <!--  Экран Настройка фильтрации  /-->
+    <string name="filter_hint">Введите сумму</string>
+    <string name="filter_salary">Ожидаемая зарплата</string>
+    <string name="filter_settings">Настройки фильтрации</string>
+    <string name="filter_not_show">Не показывать без зарплаты</string>
+    <string name="filter_apply">Применить</string>
+    <string name="filter_reset">Сбросить</string>
 
 </resources>
