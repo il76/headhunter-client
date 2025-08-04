@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.ui.vacancy
 
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.data.dto.Phone
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
 import ru.practicum.android.diploma.util.Converter
@@ -82,6 +84,8 @@ class VacancyFragment : Fragment() {
         showLogo(vacancyFull.logoUrl)
         showKeySkills(vacancyFull.keySkills)
         showEmploymentAndSchedule(vacancyFull.employment, vacancyFull.schedule)
+        showContacts(vacancyFull.contacts?.email, vacancyFull.contacts?.phones)
+        Log.i("hhc", vacancyFull.contacts.toString())
         binding.shareButton.setOnClickListener {
             viewModel.shareVacancy(vacancyFull.logoUrl) // fix to real url
         }
@@ -154,6 +158,29 @@ class VacancyFragment : Fragment() {
                 binding.employmentText.isVisible = true
                 binding.employmentText.text = "$employment, $schedule"
             }
+        }
+    }
+
+    private fun showContacts(email: String?, phones: List<Phone>?) {
+        if (email.isNullOrEmpty()) {
+            binding.emailTitle.isVisible = false
+            binding.emailText.isVisible = false
+        } else {
+            binding.emailTitle.isVisible = true
+            binding.emailText.isVisible = true
+            binding.emailText.text = email
+        }
+        if (phones.isNullOrEmpty()) {
+            binding.phonesTitle.isVisible = false
+            binding.phonesText.isVisible = false
+        } else {
+            binding.phonesTitle.isVisible = true
+            binding.phonesText.isVisible = true
+            val phonesText = phones.joinToString("\n") { phone ->
+                val commentPart = phone.comment?.let { " ($it)" } ?: ""
+                "+${phone.country} ${phone.city} ${phone.number}$commentPart"
+            }
+            binding.phonesText.text = phonesText
         }
     }
 

@@ -31,6 +31,11 @@
     <string name="vacancy_req">Требования</string>
     <string name="vacancy_conditions">Условия</string>
     <string name="vacancy_skills">Ключевые навыки</string>
+    <string name="vacancy_contacts">Контакты</string>
+    <string name="vacancy_phones">Телефоны</string>
+    <string name="vacancy_email">Email</string>
+
+
 
     <string name="search_no_internet">Нет интернета</string>
     <string name="search_list_fetch_fail">Не удалось получить список вакансий</string>
