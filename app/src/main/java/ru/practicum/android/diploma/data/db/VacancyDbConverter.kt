@@ -16,7 +16,8 @@ class VacancyDbConverter {
             experience = vacancy.experience,
             employment = vacancy.employment,
             description = vacancy.description,
-            keySkills = vacancy.keySkills
+            keySkills = vacancy.keySkills,
+            schedule = vacancy.schedule,
         )
     }
 
@@ -33,7 +34,8 @@ class VacancyDbConverter {
             experience = vacancy.experience,
             employment = vacancy.employment,
             description = vacancy.description,
-            keySkills = vacancy.keySkills
+            keySkills = vacancy.keySkills,
+            schedule = vacancy.schedule,
         )
     }
 }

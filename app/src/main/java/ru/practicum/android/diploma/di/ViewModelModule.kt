@@ -10,7 +10,9 @@ import ru.practicum.android.diploma.ui.vacancy.VacancyViewModel
 val viewModelModule = module {
 
     viewModel {
-        FavoriteViewModel()
+        FavoriteViewModel(
+            repository = get()
+        )
     }
 
     viewModel {
@@ -24,6 +26,10 @@ val viewModelModule = module {
     }
 
     viewModel {
-        VacancyViewModel()
+        VacancyViewModel(
+            networkRepository = get(),
+            localRepository = get(),
+            sharingInteractor = get(),
+        )
     }
 }

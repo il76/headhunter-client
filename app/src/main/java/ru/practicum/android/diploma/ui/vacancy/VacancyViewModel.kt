@@ -3,40 +3,58 @@ package ru.practicum.android.diploma.ui.vacancy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import ru.practicum.android.diploma.domain.api.SharingInteractor
+import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
+import ru.practicum.android.diploma.domain.api.VacancyRepository
+import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
-import ru.practicum.android.diploma.domain.models.VacancyFull
+import ru.practicum.android.diploma.util.Resource
 
-class VacancyViewModel : ViewModel() {
+class VacancyViewModel(
+    private val networkRepository: VacancyRepository,
+    private val localRepository: VacancyLocalRepository,
+    private val sharingInteractor: SharingInteractor,
+) : ViewModel() {
     private val _screenState = MutableLiveData<VacancyDetailsState>(VacancyDetailsState.LoadingState)
     val screenState: LiveData<VacancyDetailsState> = _screenState
     private var id = -1
 
-    fun loadVacancy(vacancyId: Int): VacancyFull {
+    suspend fun loadVacancy(vacancyId: Int, useDB: Boolean = false): Vacancy {
         id = vacancyId
-        val vacancy = mockVacancy
-        _screenState.value = VacancyDetailsState.ContentState(vacancy)
-        return vacancy
+        val vacancyFlow = if (useDB) {
+            localRepository.getVacancyDetails(id.toString())
+                .map { resource ->
+                    when (resource) {
+                        is Resource.Success -> resource.data?.let { VacancyDetailsState.ContentState(it) }
+                        is Resource.Error -> VacancyDetailsState.NetworkErrorState(resource.message ?: "DB Error")
+                    }
+                }
+        } else {
+            networkRepository.getVacancyDetails(vacancyId.toString())
+        }
+
+        val state = vacancyFlow.first()
+        return when (state) {
+            is VacancyDetailsState.ContentState -> {
+                _screenState.value = state
+                state.vacancy
+            }
+            else -> throw when (state) {
+                is VacancyDetailsState.EmptyState -> VacancyErrorException("Vacancy not found")
+                is VacancyDetailsState.NetworkErrorState -> VacancyErrorException(state.message)
+                is VacancyDetailsState.ServerError -> VacancyErrorException("Server error")
+                is VacancyDetailsState.ConnectionError -> VacancyErrorException("No internet")
+                VacancyDetailsState.LoadingState -> VacancyErrorException("Unexpected loading state")
+                else -> VacancyErrorException("Unknown error")
+            }
+        }
     }
 
-    val mockVacancy = VacancyFull(
-        id = 0,
-        name = "Android-разработчик",
-        company = "Еда",
-        currency = "₽",
-        salaryFrom = 100_000,
-        salaryTo = null,
-        area = "Москва",
-        alternateUrl = "https://hh.ru/vacancy/8331228",
-        icon = "",
-        employment = "Полная занятость, Удаленная работа",
-        experience = "От 1 года до 3 лет",
-        schedule = "",
-        description = "<h3>Обязанности</h3><ul><li>Разрабатывать новую функциональность приложения</li></ul>",
-        contact = "",
-        email = "",
-        phone = "",
-        comment = "",
-        keySkills = "Знание классических алгоритмов и структуры данных",
-        address = ""
-    )
+    fun shareVacancy(url: String) {
+        sharingInteractor.share(url)
+    }
 }
+
+class VacancyErrorException(message: String) : Exception(message)

@@ -11,14 +11,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.VacancyRepository
-import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
 class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
-
-    var vacancyList: List<Vacancy> = mutableListOf()
 
     private val _state = MutableStateFlow<SearchUIState>(SearchUIState())
     val state: StateFlow<SearchUIState> = _state.asStateFlow()

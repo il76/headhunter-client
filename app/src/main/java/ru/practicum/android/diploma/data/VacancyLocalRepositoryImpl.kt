@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.db.VacancyDbConverter
 import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
+import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
 
@@ -26,6 +27,16 @@ class VacancyLocalRepositoryImpl(
             }
             .catch { e ->
                 emit(Resource.Error("Failed to load vacancies: ${e.message}"))
+            }
+    }
+
+    override fun getVacancyDetails(vacancyId: String): Flow<Resource<Vacancy>> {
+        return appDatabase.vacancyDao().getVacancyDetails(vacancyId)
+            .map { vacancyEntity ->
+                Resource.Success(vacancyDbConverter.map(vacancyEntity)) as Resource<Vacancy>
+            }
+            .catch { e ->
+                emit(Resource.Error("Failed to load vacancy details: ${e.message}"))
             }
     }
 }
