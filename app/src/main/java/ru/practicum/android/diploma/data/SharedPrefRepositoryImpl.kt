@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.data
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.google.gson.Gson
-
 import ru.practicum.android.diploma.domain.api.SharedPrefRepository
 import ru.practicum.android.diploma.domain.models.Filter
 
