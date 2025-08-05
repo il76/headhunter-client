@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.data.dto.Phone
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
 import ru.practicum.android.diploma.util.Converter
@@ -42,6 +43,11 @@ class VacancyFragment : Fragment() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
+        binding.favButton.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.favoriteAction()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -59,6 +65,15 @@ class VacancyFragment : Fragment() {
                 VacancyDetailsState.ServerError -> showErrorServer()
                 is VacancyDetailsState.NetworkErrorState -> TODO()
             }
+        }
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            binding.favButton.setImageResource(
+                if (isFavorite) {
+                    R.drawable.ic_favorite_active
+                } else {
+                    R.drawable.ic_favorite
+                }
+            )
         }
     }
 
@@ -82,8 +97,10 @@ class VacancyFragment : Fragment() {
         showLogo(vacancyFull.logoUrl)
         showKeySkills(vacancyFull.keySkills)
         showEmploymentAndSchedule(vacancyFull.employment, vacancyFull.schedule)
+        showContacts(vacancyFull.contacts?.email, vacancyFull.contacts?.phones)
         binding.shareButton.setOnClickListener {
-            viewModel.shareVacancy(vacancyFull.logoUrl) // fix to real url
+            // возможно нужно использовать поле из ответа? Но пока у нас его нет
+            viewModel.shareVacancy("https://hh.ru/vacancy/${vacancyFull.id}")
         }
     }
 
@@ -154,6 +171,29 @@ class VacancyFragment : Fragment() {
                 binding.employmentText.isVisible = true
                 binding.employmentText.text = "$employment, $schedule"
             }
+        }
+    }
+
+    private fun showContacts(email: String?, phones: List<Phone>?) {
+        if (email.isNullOrEmpty()) {
+            binding.emailTitle.isVisible = false
+            binding.emailText.isVisible = false
+        } else {
+            binding.emailTitle.isVisible = true
+            binding.emailText.isVisible = true
+            binding.emailText.text = email
+        }
+        if (phones.isNullOrEmpty()) {
+            binding.phonesTitle.isVisible = false
+            binding.phonesText.isVisible = false
+        } else {
+            binding.phonesTitle.isVisible = true
+            binding.phonesText.isVisible = true
+            val phonesText = phones.joinToString("\n") { phone ->
+                val commentPart = phone.comment?.let { " ($it)" } ?: ""
+                "+${phone.country} ${phone.city} ${phone.number}$commentPart"
+            }
+            binding.phonesText.text = phonesText
         }
     }
 

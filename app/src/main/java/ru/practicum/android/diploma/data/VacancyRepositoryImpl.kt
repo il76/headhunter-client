@@ -36,6 +36,11 @@ class VacancyRepositoryImpl(
                                     salaryFrom = it.salary?.from,
                                     salaryTo = it.salary?.to,
                                     schedule = it.schedule?.name,
+                                    experience = null,
+                                    employment = null,
+                                    description = null,
+                                    keySkills = null,
+                                    contacts = null,
                                 )
                             },
                             found = searchResponse.found
@@ -70,6 +75,7 @@ class VacancyRepositoryImpl(
                             employerName = this.employer?.name ?: "",
                             salaryCurrency = this.salary?.currency ?: "",
                             schedule = this.schedule?.name,
+                            contacts = this.contacts,
                         )
                     }
                 ))

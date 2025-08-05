@@ -23,7 +23,7 @@ val repositoryModule = module {
             vacancyDbConverter = get()
         )
     }
-    factory { VacancyDbConverter() }
+    factory { VacancyDbConverter(get()) }
 
     factory<IndustriesRepository> {
         IndustriesRepositoryImpl(
