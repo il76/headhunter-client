@@ -7,24 +7,31 @@ import java.text.NumberFormat
 object Converter {
     fun formatSalaryString(salaryFrom: Int?, salaryTo: Int?, currency: String, context: Context): String {
         return when {
-            salaryFrom != null && salaryTo != null -> context.getString(
-                R.string.salary_from_to,
-                formatNumber(salaryFrom),
-                formatNumber(salaryTo),
-                formatCurrency(currency)
-            )
+            salaryFrom != null && salaryTo != null && salaryFrom > 0 && salaryTo > 0 -> {
+                context.getString(
+                    R.string.salary_from_to,
+                    salaryFrom,
+                    formatCurrency(currency),
+                    salaryTo,
+                    formatCurrency(currency)
+                )
+            }
 
-            salaryFrom != null && salaryTo == null -> context.getString(
-                R.string.salary_from,
-                formatNumber(salaryFrom),
-                formatCurrency(currency)
-            )
+            salaryFrom != null && salaryFrom > 0 -> {
+                context.getString(
+                    R.string.salary_from,
+                    salaryFrom,
+                    formatCurrency(currency)
+                )
+            }
 
-            salaryFrom == null && salaryTo != null -> context.getString(
-                R.string.salary_to,
-                formatNumber(salaryTo),
-                formatCurrency(currency)
-            )
+            salaryTo != null && salaryTo > 0 -> {
+                context.getString(
+                    R.string.salary_to,
+                    salaryTo,
+                    formatCurrency(currency)
+                )
+            }
 
             else -> context.getString(R.string.empty_salary)
         }
