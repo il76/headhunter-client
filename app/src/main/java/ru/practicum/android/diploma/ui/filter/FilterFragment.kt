@@ -17,7 +17,7 @@ import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.domain.models.Filter
 import ru.practicum.android.diploma.domain.models.Industry
 
-class FilterFragment() : Fragment() {
+class FilterFragment : Fragment() {
 
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!

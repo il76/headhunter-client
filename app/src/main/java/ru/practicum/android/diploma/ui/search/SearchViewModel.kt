@@ -18,7 +18,10 @@ import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
-class SearchViewModel(private val repository: VacancyRepository, private val sharedPrefInteractor: SharedPrefInteractor) : ViewModel() {
+class SearchViewModel(
+    private val repository: VacancyRepository,
+    private val sharedPrefInteractor: SharedPrefInteractor
+) : ViewModel() {
 
     private val _state = MutableStateFlow<SearchUIState>(SearchUIState())
     val state: StateFlow<SearchUIState> = _state.asStateFlow()
@@ -62,7 +65,8 @@ class SearchViewModel(private val repository: VacancyRepository, private val sha
     // Подгрузка следующей страницы (при скролле)
     fun loadNextPage() {
         if (!_state.value.canLoadMore ||
-            _state.value.pagination is SearchUIState.PaginationState.LOADING) {
+            _state.value.pagination is SearchUIState.PaginationState.LOADING
+        ) {
             return
         }
 
