@@ -27,7 +27,7 @@ class RetrofitNetworkClient(
 
     private suspend fun makeRequest(apiCall: suspend () -> Response): Response {
         return try {
-            val data = withContext(Dispatchers.IO) { apiCall() }
+            val data = apiCall()
             data.apply {
                 resultCode = HTTP_SUCCESS_CODE
                 resultError = ""
