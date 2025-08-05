@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.db.VacancyDbConverter
 import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
+import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
 
@@ -13,7 +14,7 @@ class VacancyLocalRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val vacancyDbConverter: VacancyDbConverter
 ) : VacancyLocalRepository {
-    override fun getAll(): Flow<Resource<VacancySearchResult>> {
+    override suspend fun getAll(): Flow<Resource<VacancySearchResult>> {
         return appDatabase.vacancyDao().getVacancies()
             .map { vacancies ->
                 val vacancyList = vacancies.map { vacancyDbConverter.map(it) }
@@ -27,5 +28,23 @@ class VacancyLocalRepositoryImpl(
             .catch { e ->
                 emit(Resource.Error("Failed to load vacancies: ${e.message}"))
             }
+    }
+
+    override suspend fun getVacancyDetails(vacancyId: String): Flow<Resource<Vacancy>> {
+        return appDatabase.vacancyDao().getVacancyDetails(vacancyId)
+            .map { vacancyEntity ->
+                Resource.Success(vacancyDbConverter.map(vacancyEntity)) as Resource<Vacancy>
+            }
+            .catch { e ->
+                emit(Resource.Error("Failed to load vacancy details: ${e.message}"))
+            }
+    }
+
+    override suspend fun saveVacancy(vacancy: Vacancy) {
+        appDatabase.vacancyDao().insertVacancy(vacancyDbConverter.map(vacancy))
+    }
+
+    override suspend fun deleteVacancy(vacancyId: String) {
+        appDatabase.vacancyDao().deleteVacancyById(vacancyId)
     }
 }

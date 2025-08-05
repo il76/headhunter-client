@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.ui.search
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -10,18 +12,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.SharedPrefInteractor
 import ru.practicum.android.diploma.domain.api.VacancyRepository
-import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
-class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
-
-    var vacancyList: List<Vacancy> = mutableListOf()
+class SearchViewModel(
+    private val repository: VacancyRepository,
+    private val sharedPrefInteractor: SharedPrefInteractor
+) : ViewModel() {
 
     private val _state = MutableStateFlow<SearchUIState>(SearchUIState())
     val state: StateFlow<SearchUIState> = _state.asStateFlow()
+
+    private val _filterState = MutableLiveData<Boolean>()
+    fun filterState(): LiveData<Boolean> = _filterState
 
     private var currentPage = 0
 
@@ -59,7 +65,8 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
     // Подгрузка следующей страницы (при скролле)
     fun loadNextPage() {
         if (!_state.value.canLoadMore ||
-            _state.value.pagination is SearchUIState.PaginationState.LOADING) {
+            _state.value.pagination is SearchUIState.PaginationState.LOADING
+        ) {
             return
         }
 
@@ -156,6 +163,15 @@ class SearchViewModel(private val repository: VacancyRepository) : ViewModel() {
                     vacancyList = emptyList()
                 )
             }
+        }
+    }
+
+    fun renderFilterState() {
+        val filter = sharedPrefInteractor.getFilter()
+        if (filter.industry == null && filter.salary == null && filter.onlyWithSalary != true) {
+            _filterState.postValue(false)
+        } else {
+            _filterState.postValue(true)
         }
     }
 

@@ -13,7 +13,10 @@ interface VacancyDao {
     suspend fun insertVacancy(vacancy: VacancyEntity)
 
     @Query("DELETE FROM vacancies WHERE id = :vacancyId")
-    suspend fun deleteVacancyById(vacancyId: Int)
+    suspend fun deleteVacancyById(vacancyId: String)
+
+    @Query("SELECT * FROM vacancies WHERE id = :vacancyId")
+    fun getVacancyDetails(vacancyId: String): Flow<VacancyEntity>
 
     @Query("SELECT * FROM vacancies ORDER BY id DESC")
     fun getVacancies(): Flow<List<VacancyEntity>>

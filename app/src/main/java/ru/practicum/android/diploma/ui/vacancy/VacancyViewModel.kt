@@ -3,40 +3,144 @@ package ru.practicum.android.diploma.ui.vacancy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import ru.practicum.android.diploma.domain.api.SharingInteractor
+import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
+import ru.practicum.android.diploma.domain.api.VacancyRepository
+import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
-import ru.practicum.android.diploma.domain.models.VacancyFull
+import ru.practicum.android.diploma.util.Resource
 
-class VacancyViewModel : ViewModel() {
+class VacancyViewModel(
+    private val networkRepository: VacancyRepository,
+    private val localRepository: VacancyLocalRepository,
+    private val sharingInteractor: SharingInteractor,
+) : ViewModel() {
     private val _screenState = MutableLiveData<VacancyDetailsState>(VacancyDetailsState.LoadingState)
     val screenState: LiveData<VacancyDetailsState> = _screenState
-    private var id = -1
 
-    fun loadVacancy(vacancyId: Int): VacancyFull {
+    // Добавляем LiveData для флага избранного
+    private val _isFavorite = MutableLiveData<Boolean>(false)
+    val isFavorite: LiveData<Boolean> = _isFavorite
+
+    private var id = -1
+    private var loadedFromNetwork = false // Флаг, откуда загружены данные
+
+    suspend fun loadVacancy(vacancyId: Int, useDB: Boolean = false): Vacancy {
         id = vacancyId
-        val vacancy = mockVacancy
-        _screenState.value = VacancyDetailsState.ContentState(vacancy)
-        return vacancy
+        loadedFromNetwork = !useDB // Запоминаем, откуда загружаем
+
+        val vacancyFlow = if (useDB) {
+            localRepository.getVacancyDetails(id.toString())
+                .map { resource ->
+                    when (resource) {
+                        is Resource.Success -> resource.data?.let { VacancyDetailsState.ContentState(it) }
+                        is Resource.Error -> VacancyDetailsState.NetworkErrorState(resource.message ?: "DB Error")
+                    }
+                }
+        } else {
+            networkRepository.getVacancyDetails(vacancyId.toString())
+        }
+
+        val state = vacancyFlow.first()
+        return when (state) {
+            is VacancyDetailsState.ContentState -> {
+                _screenState.value = state
+                // Если загрузили из сети - проверяем наличие в БД
+                if (loadedFromNetwork) {
+                    checkFavoriteStatus(state.vacancy.id)
+                } else {
+                    // Если загрузили из БД - значит точно в избранном
+                    _isFavorite.value = true
+                }
+                state.vacancy
+            }
+            else -> throw when (state) {
+                is VacancyDetailsState.EmptyState -> VacancyErrorException("Vacancy not found")
+                is VacancyDetailsState.NetworkErrorState -> VacancyErrorException(state.message)
+                is VacancyDetailsState.ServerError -> VacancyErrorException("Server error")
+                is VacancyDetailsState.ConnectionError -> VacancyErrorException("No internet")
+                VacancyDetailsState.LoadingState -> VacancyErrorException("Unexpected loading state")
+                else -> VacancyErrorException("Unknown error")
+            }
+        }
     }
 
-    val mockVacancy = VacancyFull(
-        id = 0,
-        name = "Android-разработчик",
-        company = "Еда",
-        currency = "₽",
-        salaryFrom = 100_000,
-        salaryTo = null,
-        area = "Москва",
-        alternateUrl = "https://hh.ru/vacancy/8331228",
-        icon = "",
-        employment = "Полная занятость, Удаленная работа",
-        experience = "От 1 года до 3 лет",
-        schedule = "",
-        description = "<h3>Обязанности</h3><ul><li>Разрабатывать новую функциональность приложения</li></ul>",
-        contact = "",
-        email = "",
-        phone = "",
-        comment = "",
-        keySkills = "Знание классических алгоритмов и структуры данных",
-        address = ""
-    )
+    // Метод для проверки наличия вакансии в избранном
+    private suspend fun checkFavoriteStatus(vacancyId: String) {
+        val vacancy = localRepository.getVacancyDetails(vacancyId).first()
+        _isFavorite.value = vacancy is Resource.Success && vacancy.data != null
+    }
+
+    fun shareVacancy(url: String) {
+        sharingInteractor.share(url)
+    }
+
+    suspend fun saveFavoriteVacancy() {
+        when (val currentState = screenState.value) {
+            is VacancyDetailsState.ContentState -> {
+                localRepository.saveVacancy(currentState.vacancy)
+                _isFavorite.value = true // Обновляем флаг после сохранения
+            }
+            else -> {
+                throw VacancyErrorException("No vacancy data to save")
+            }
+        }
+    }
+
+    suspend fun deleteFavoriteVacancy() {
+        when (val currentState = screenState.value) {
+            is VacancyDetailsState.ContentState -> {
+                localRepository.deleteVacancy(currentState.vacancy.id)
+                _isFavorite.value = false // Обновляем флаг после удаления
+            }
+            else -> {
+                throw VacancyErrorException("No vacancy data to save")
+            }
+        }
+    }
+
+    // Новый метод для загрузки избранной вакансии
+    suspend fun loadFavoriteVacancy(vacancyId: String) {
+        try {
+            val result = localRepository.getVacancyDetails(vacancyId).first()
+            when (result) {
+                is Resource.Success -> {
+                    result.data?.let {
+                        _screenState.value = VacancyDetailsState.ContentState(it)
+                        _isFavorite.value = true
+                    } ?: run {
+                        _screenState.value = VacancyDetailsState.EmptyState
+                        _isFavorite.value = false
+                    }
+                }
+                is Resource.Error -> {
+                    _screenState.value = VacancyDetailsState.NetworkErrorState(result.message ?: "DB Error")
+                    _isFavorite.value = false
+                }
+            }
+        } catch (e: VacancyErrorException) {
+            _screenState.value = VacancyDetailsState.NetworkErrorState(e.message ?: "Error loading favorite")
+            _isFavorite.value = false
+        }
+    }
+
+    suspend fun favoriteAction() {
+        when (val currentState = screenState.value) {
+            is VacancyDetailsState.ContentState -> {
+                val isFavorite = _isFavorite.value ?: false
+                if (isFavorite) {
+                    deleteFavoriteVacancy() // Удаляем, если уже в избранном
+                } else {
+                    saveFavoriteVacancy() // Добавляем, если не в избранном
+                }
+            }
+            else -> {
+                throw VacancyErrorException("No vacancy data to perform favorite action")
+            }
+        }
+    }
 }
+
+class VacancyErrorException(message: String) : Exception(message)

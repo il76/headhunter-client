@@ -12,4 +12,6 @@ data class VacancyDto(
     val publishedAt: String,
     @SerializedName("alternate_url")
     val alternateUrl: String,
+    val schedule: Schedule?,
+    val contacts: Contacts,
 )

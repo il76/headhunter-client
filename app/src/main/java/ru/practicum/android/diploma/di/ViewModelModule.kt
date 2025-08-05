@@ -10,20 +10,29 @@ import ru.practicum.android.diploma.ui.vacancy.VacancyViewModel
 val viewModelModule = module {
 
     viewModel {
-        FavoriteViewModel()
-    }
-
-    viewModel {
-        FilterViewModel()
-    }
-
-    viewModel {
-        SearchViewModel(
+        FavoriteViewModel(
             repository = get()
         )
     }
 
     viewModel {
-        VacancyViewModel()
+        FilterViewModel(
+            sharedPrefInteractor = get()
+        )
+    }
+
+    viewModel {
+        SearchViewModel(
+            repository = get(),
+            sharedPrefInteractor = get()
+        )
+    }
+
+    viewModel {
+        VacancyViewModel(
+            networkRepository = get(),
+            localRepository = get(),
+            sharingInteractor = get(),
+        )
     }
 }

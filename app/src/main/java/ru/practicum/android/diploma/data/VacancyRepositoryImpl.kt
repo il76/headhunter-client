@@ -10,10 +10,8 @@ import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
-import ru.practicum.android.diploma.domain.models.VacancyFull
 import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
-import kotlin.String
 
 class VacancyRepositoryImpl(
     private val networkClient: NetworkClient
@@ -37,6 +35,12 @@ class VacancyRepositoryImpl(
                                     salaryCurrency = it.salary?.currency ?: "",
                                     salaryFrom = it.salary?.from,
                                     salaryTo = it.salary?.to,
+                                    schedule = it.schedule?.name,
+                                    experience = null,
+                                    employment = null,
+                                    description = null,
+                                    keySkills = null,
+                                    contacts = null,
                                 )
                             },
                             found = searchResponse.found
@@ -55,11 +59,11 @@ class VacancyRepositoryImpl(
             REQUEST_OK -> {
                 emit(VacancyDetailsState.ContentState(
                     with(response as VacancyDetailsResponse) {
-                        VacancyFull(
-                            id = this.id.toInt(),
+                        Vacancy(
+                            id = this.id,
                             name = this.name,
-                            icon = this.employer?.logoUrls?.original.toString(),
-                            area = this.area?.name ?: "",
+                            logoUrl = this.employer?.logoUrls?.original.toString(),
+                            areaName = this.area?.name ?: "",
                             employment = this.employer?.name ?: "",
                             salaryTo = this.salary?.to,
                             salaryFrom = this.salary?.from,
@@ -67,7 +71,11 @@ class VacancyRepositoryImpl(
                             description = this.description ?: "",
                             keySkills = this.keySkills?.map { keySkill ->
                                 keySkill.name
-                            }.toString(),
+                            },
+                            employerName = this.employer?.name ?: "",
+                            salaryCurrency = this.salary?.currency ?: "",
+                            schedule = this.schedule?.name,
+                            contacts = this.contacts,
                         )
                     }
                 ))
