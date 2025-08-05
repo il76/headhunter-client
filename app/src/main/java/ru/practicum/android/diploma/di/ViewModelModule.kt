@@ -16,12 +16,15 @@ val viewModelModule = module {
     }
 
     viewModel {
-        FilterViewModel()
+        FilterViewModel(
+            sharedPrefInteractor = get()
+        )
     }
 
     viewModel {
         SearchViewModel(
-            repository = get()
+            repository = get(),
+            sharedPrefInteractor = get()
         )
     }
 

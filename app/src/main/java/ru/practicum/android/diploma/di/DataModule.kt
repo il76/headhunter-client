@@ -20,6 +20,7 @@ val dataModule = module {
         androidContext()
             .getSharedPreferences("hh_preferences", Context.MODE_PRIVATE)
     }
+
     factory {
         Gson()
     }

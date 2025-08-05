@@ -24,7 +24,7 @@ class IndustriesRepositoryImpl(
                 emit(
                     Resource.Success(
                         IndustrySearchResult(
-                            industrys = searchResponse.industries.map {
+                            industries = searchResponse.industries.map {
                                 Industry(
                                     id = it.id,
                                     name = it.name
@@ -35,6 +35,7 @@ class IndustriesRepositoryImpl(
                     )
                 )
             }
+
             else -> emit(Resource.Error(response.resultError))
         }
     }
