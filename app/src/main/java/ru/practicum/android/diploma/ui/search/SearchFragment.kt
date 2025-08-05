@@ -125,6 +125,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupSearchView() {
+        viewModel.renderFilterState()
         // очистка поискового запроса
         binding.searchIconClear.setOnClickListener {
             binding.searchEditText.setText("")
@@ -152,6 +153,10 @@ class SearchFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.filterState().observe(viewLifecycleOwner) { isChecked ->
+            renderFilterState(isChecked)
+        }
     }
 
     private fun handleMainState(state: SearchUIState) {
@@ -161,23 +166,27 @@ class SearchFragment : Fragment() {
                     showFullscreenLoading()
                 }
             }
+
             SearchUIState.SearchStatus.SUCCESS -> {
                 hideFullscreenLoading()
                 adapter.submitList(state.vacancyList)
                 binding.searchTotalFound.text = getString(R.string.search_total_found, state.totalFound)
             }
+
             SearchUIState.SearchStatus.ERROR_NET -> {
                 hideFullscreenLoading()
                 showErrorView()
                 binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_no_internet)
                 binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_no_internet)
             }
+
             SearchUIState.SearchStatus.EMPTY_RESULT -> {
                 hideFullscreenLoading()
                 showEmptyView()
                 binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_nothing_found)
                 binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_list_fetch_fail)
             }
+
             SearchUIState.SearchStatus.NONE -> {
                 showEmptyView()
                 binding.progressBar.isVisible = false
@@ -241,6 +250,13 @@ class SearchFragment : Fragment() {
 
     private fun handleRefreshState(state: SearchUIState) {
         binding.swipeRefreshLayout.isRefreshing = state.isRefreshing
+    }
+
+    private fun renderFilterState(isChecked: Boolean) {
+        when (isChecked) {
+            true -> binding.filterIcon.setImageResource(R.drawable.ic_filters_on)
+            false -> binding.filterIcon.setImageResource(R.drawable.ic_filters_off)
+        }
     }
 
     companion object {

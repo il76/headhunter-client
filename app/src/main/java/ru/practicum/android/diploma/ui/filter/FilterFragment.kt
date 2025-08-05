@@ -17,7 +17,7 @@ import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.domain.models.Filter
 import ru.practicum.android.diploma.domain.models.Industry
 
-class FilterFragment : Fragment() {
+class FilterFragment() : Fragment() {
 
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
@@ -46,6 +46,23 @@ class FilterFragment : Fragment() {
         setupSalaryField(currentFilter?.salary)
         setupSalaryCheckbox(currentFilter?.onlyWithSalary)
 
+        viewModel.updatedFilter.observe(viewLifecycleOwner) { updatedFilter ->
+            binding.btnApplyFilter.isVisible = updatedFilter != currentFilter
+            binding.btnResetFilter.isVisible = updatedFilter != Filter()
+        }
+
+        setupListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.refreshUpdatedFilter()
+        val currentFilter = viewModel.currentFilter.value
+        val updatedFilter = viewModel.updatedFilter.value
+        setupIndustryView(updatedFilter?.industry)
+        setupSalaryField(updatedFilter?.salary)
+        setupSalaryCheckbox(updatedFilter?.onlyWithSalary)
         viewModel.updatedFilter.observe(viewLifecycleOwner) { updatedFilter ->
             binding.btnApplyFilter.isVisible = updatedFilter != currentFilter
             binding.btnResetFilter.isVisible = updatedFilter != Filter()
