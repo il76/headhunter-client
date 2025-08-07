@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.util
 
 import android.content.Context
 import ru.practicum.android.diploma.R
-import java.text.NumberFormat
 
 object Converter {
     fun formatSalaryString(salaryFrom: Int?, salaryTo: Int?, currency: String, context: Context): String {
@@ -55,7 +54,7 @@ object Converter {
         }
     }
 
-    private fun formatNumber(number: Int): String {
-        return NumberFormat.getInstance().format(number)
-    }
+//    private fun formatNumber(number: Int): String {
+//        return NumberFormat.getInstance().format(number)
+//    }
 }

@@ -16,8 +16,22 @@ import ru.practicum.android.diploma.util.Resource
 class VacancyRepositoryImpl(
     private val networkClient: NetworkClient
 ) : VacancyRepository {
-    override fun search(query: String, page: Int): Flow<Resource<VacancySearchResult>> = flow {
-        val response = networkClient.doRequest(VacancySearchRequest(query, page))
+    override fun search(
+        query: String,
+        page: Int,
+        onlyWithSalary: Boolean,
+        area: String?,
+        salary: Long?
+    ): Flow<Resource<VacancySearchResult>> = flow {
+        val response = networkClient.doRequest(
+            VacancySearchRequest(
+                text = query,
+                page = page,
+                area = area,
+                salary = salary,
+                onlyWithSalary = onlyWithSalary,
+            )
+        )
         when (response.resultCode) {
             NO_INTERNET -> emit(Resource.Error("Check connection to internet"))
             REQUEST_OK -> {
@@ -36,11 +50,6 @@ class VacancyRepositoryImpl(
                                     salaryFrom = it.salary?.from,
                                     salaryTo = it.salary?.to,
                                     schedule = it.schedule?.name,
-                                    experience = null,
-                                    employment = null,
-                                    description = null,
-                                    keySkills = null,
-                                    contacts = null,
                                 )
                             },
                             found = searchResponse.found
@@ -57,28 +66,28 @@ class VacancyRepositoryImpl(
         when (response.resultCode) {
             NO_INTERNET -> emit(VacancyDetailsState.ConnectionError)
             REQUEST_OK -> {
-                emit(VacancyDetailsState.ContentState(
-                    with(response as VacancyDetailsResponse) {
-                        Vacancy(
-                            id = this.id,
-                            name = this.name,
-                            logoUrl = this.employer?.logoUrls?.original.toString(),
-                            areaName = this.area?.name ?: "",
-                            employment = this.employer?.name ?: "",
-                            salaryTo = this.salary?.to,
-                            salaryFrom = this.salary?.from,
-                            experience = this.experience?.name ?: "",
-                            description = this.description ?: "",
-                            keySkills = this.keySkills?.map { keySkill ->
-                                keySkill.name
-                            },
-                            employerName = this.employer?.name ?: "",
-                            salaryCurrency = this.salary?.currency ?: "",
-                            schedule = this.schedule?.name,
-                            contacts = this.contacts,
-                        )
-                    }
-                ))
+                emit(
+                    VacancyDetailsState.ContentState(
+                        with(response as VacancyDetailsResponse) {
+                            Vacancy(
+                                id = this.id,
+                                name = this.name,
+                                logoUrl = this.employer?.logoUrls?.original.toString(),
+                                areaName = this.area?.name ?: "",
+                                employment = this.employer?.name ?: "",
+                                salaryTo = this.salary?.to,
+                                salaryFrom = this.salary?.from,
+                                experience = this.experience?.name ?: "",
+                                description = this.description ?: "",
+                                keySkills = this.keySkills?.map { keySkill -> keySkill.name },
+                                employerName = this.employer?.name ?: "",
+                                salaryCurrency = this.salary?.currency ?: "",
+                                schedule = this.schedule?.name,
+                                contacts = this.contacts,
+                            )
+                        }
+                    )
+                )
             }
             else -> emit(VacancyDetailsState.NetworkErrorState(response.resultError))
         }

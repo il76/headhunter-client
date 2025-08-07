@@ -1,7 +1,5 @@
 package ru.practicum.android.diploma.data.network
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.IndustriesRequest
 import ru.practicum.android.diploma.data.dto.Response
@@ -15,7 +13,15 @@ class RetrofitNetworkClient(
 
     override suspend fun doRequest(dto: Any): Response {
         return when (dto) {
-            is VacancySearchRequest -> makeRequest { hhService.getVacancies(dto.text, dto.page.toString()) }
+            is VacancySearchRequest -> makeRequest {
+                hhService.getVacancies(
+                    dto.text,
+                    dto.page.toString(),
+                    area = dto.area,
+                    salary = dto.salary,
+                    onlyWithSalary = dto.onlyWithSalary
+                )
+            }
             is VacancyDetailsRequest -> makeRequest { hhService.getVacancyDetails(dto.vacancyId) }
             is IndustriesRequest -> makeRequest { hhService.getIndustries() }
             else -> Response().apply {
