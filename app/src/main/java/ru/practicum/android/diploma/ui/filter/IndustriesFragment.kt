@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.filter
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -86,8 +87,13 @@ class IndustriesFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-
-        viewModel.loadIndustries()
+        @Suppress("DEPRECATION")
+        val selectedIndustry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("selected_industries", Industry::class.java)
+        } else {
+            arguments?.getParcelable("selected_industries") as? Industry
+        }
+        viewModel.loadIndustries(selectedIndustry)
 
         binding.btnApplyIndustries.setOnClickListener {
             setFragmentResult(

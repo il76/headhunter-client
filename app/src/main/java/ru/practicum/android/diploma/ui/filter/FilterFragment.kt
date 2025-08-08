@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -65,7 +66,6 @@ class FilterFragment : Fragment() {
             } else {
                 result.getParcelable("selected_industries") as? Industry
             }
-            Log.i("ss", selectedIndustry.toString())
             if (selectedIndustry != null) {
                 handleSelectedIndustries(selectedIndustry)
             }
@@ -75,7 +75,6 @@ class FilterFragment : Fragment() {
     }
 
     private fun handleSelectedIndustries(industry: Industry) {
-        println("FilterFragment Получена отрасль: $industry")
         binding.industryContainer.value.text = industry.name
         viewModel.updateFilter(Filter(industry = industry))
     }
@@ -106,7 +105,10 @@ class FilterFragment : Fragment() {
     }
 
     private fun navigateToIndustryFragment() {
-        findNavController().navigate(R.id.action_filterFragment_to_industriesFragment)
+        findNavController().navigate(
+            R.id.action_filterFragment_to_industriesFragment,
+            bundleOf("selected_industries" to viewModel.currentFilter.value?.industry)
+        )
     }
 
     private fun resetButtonClickListener() {

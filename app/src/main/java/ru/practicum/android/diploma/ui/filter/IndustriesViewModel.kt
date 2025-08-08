@@ -20,7 +20,7 @@ class IndustriesViewModel(
     private val stateLiveData = MutableLiveData<IndustriesState>()
     fun observeState(): LiveData<IndustriesState> = stateLiveData
 
-    fun loadIndustries() {
+    fun loadIndustries(selectedIndustry: Industry?) {
         viewModelScope.launch {
             renderState(IndustriesState.Loading)
 
@@ -50,14 +50,15 @@ class IndustriesViewModel(
                                 },
                             )
                         )
+                        industryClicked(selectedIndustry)
                     }
                 }
             }
         }
     }
 
-    fun industryClicked(industry: Industry) {
-        if (selectedIndustry?.id == industry.id) {
+    fun industryClicked(industry: Industry?) {
+        if (selectedIndustry?.id == industry?.id) {
             selectedIndustry = null
         } else {
             selectedIndustry = industry
