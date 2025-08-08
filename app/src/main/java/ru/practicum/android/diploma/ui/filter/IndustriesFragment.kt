@@ -89,16 +89,16 @@ class IndustriesFragment : Fragment() {
         }
         @Suppress("DEPRECATION")
         val selectedIndustry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable("selected_industries", Industry::class.java)
+            arguments?.getParcelable(FilterFragment.PARAM_INDUSTRIES, Industry::class.java)
         } else {
-            arguments?.getParcelable("selected_industries") as? Industry
+            arguments?.getParcelable(FilterFragment.PARAM_INDUSTRIES) as? Industry
         }
         viewModel.loadIndustries(selectedIndustry)
 
         binding.btnApplyIndustries.setOnClickListener {
             setFragmentResult(
-                "industry_selection_result",
-                bundleOf("selected_industries" to viewModel.selectedIndustry)
+                FilterFragment.PARAM_INDUSTRIES_SELECTION,
+                bundleOf(FilterFragment.PARAM_INDUSTRIES to viewModel.selectedIndustry)
             )
 
             findNavController().popBackStack()

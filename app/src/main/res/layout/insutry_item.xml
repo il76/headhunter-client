@@ -21,5 +21,6 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
+        android:layout_marginHorizontal="8dp"
         android:src="@drawable/industry_check_box_off" />
 </LinearLayout>

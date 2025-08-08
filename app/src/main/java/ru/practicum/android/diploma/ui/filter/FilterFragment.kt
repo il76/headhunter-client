@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.ui.filter
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,25 +56,27 @@ class FilterFragment : Fragment() {
         }
 
         parentFragmentManager.setFragmentResultListener(
-            "industry_selection_result",
+            PARAM_INDUSTRIES_SELECTION,
             viewLifecycleOwner
         ) { _, result ->
             @Suppress("DEPRECATION")
             val selectedIndustry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                result.getParcelable("selected_industries", Industry::class.java)
+                result.getParcelable(PARAM_INDUSTRIES, Industry::class.java)
             } else {
-                result.getParcelable("selected_industries") as? Industry
+                result.getParcelable(PARAM_INDUSTRIES) as? Industry
             }
-            if (selectedIndustry != null) {
-                handleSelectedIndustries(selectedIndustry)
-            }
+            handleSelectedIndustries(selectedIndustry)
         }
 
         setupListeners()
     }
 
-    private fun handleSelectedIndustries(industry: Industry) {
-        binding.industryContainer.value.text = industry.name
+    private fun handleSelectedIndustries(industry: Industry?) {
+        if (industry != null) {
+            binding.industryContainer.value.text = industry.name
+        } else {
+            binding.industryContainer.value.isVisible = false
+        }
         viewModel.updateFilter(Filter(industry = industry))
     }
 
@@ -107,7 +108,7 @@ class FilterFragment : Fragment() {
     private fun navigateToIndustryFragment() {
         findNavController().navigate(
             R.id.action_filterFragment_to_industriesFragment,
-            bundleOf("selected_industries" to viewModel.currentFilter.value?.industry)
+            bundleOf(PARAM_INDUSTRIES to viewModel.currentFilter.value?.industry)
         )
     }
 
@@ -117,6 +118,7 @@ class FilterFragment : Fragment() {
         binding.salaryCheckbox.isChecked = false
         viewModel.refreshUpdatedFilter()
         binding.btnApplyFilter.isVisible = false
+        handleSelectedIndustries(null)
     }
 
     private fun setupInputSalaryListeners() {
@@ -210,5 +212,10 @@ class FilterFragment : Fragment() {
     private fun hideKeyboard(view: View, context: Context) {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    companion object {
+        const val PARAM_INDUSTRIES = "selected_industries"
+        const val PARAM_INDUSTRIES_SELECTION = "industry_selection_result"
     }
 }
