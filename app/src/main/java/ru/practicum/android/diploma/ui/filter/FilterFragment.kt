@@ -89,6 +89,7 @@ class FilterFragment : Fragment() {
 
     private fun setupListeners() {
         binding.industryContainer.elementButton.setOnClickListener { navigateToIndustryFragment() }
+        binding.industryContainer.filterItem.setOnClickListener { navigateToIndustryFragment() }
         binding.btnResetFilter.setOnClickListener { resetButtonClickListener() }
         setupInputSalaryListeners()
         binding.btnApplyFilter.setOnClickListener { submitFilter() }

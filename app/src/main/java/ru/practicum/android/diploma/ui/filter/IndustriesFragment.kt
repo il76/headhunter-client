@@ -97,6 +97,9 @@ class IndustriesFragment : Fragment() {
             findNavController().popBackStack()
         }
         binding.searchIndustryEditText.addTextChangedListener(textWatcher)
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         super.onViewCreated(view, savedInstanceState)
     }
