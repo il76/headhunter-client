@@ -37,4 +37,3 @@ class FilterViewModel(private val sharedPrefInteractor: SharedPrefInteractor) : 
         _updatedFilter.value = updatedFilter
     }
 }
-

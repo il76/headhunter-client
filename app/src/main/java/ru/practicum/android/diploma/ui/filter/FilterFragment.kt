@@ -53,7 +53,21 @@ class FilterFragment : Fragment() {
             binding.btnResetFilter.isVisible = updatedFilter != Filter()
         }
 
+        parentFragmentManager.setFragmentResultListener(
+            "industry_selection_result",
+            viewLifecycleOwner
+        ) { _, result ->
+            val selectedIndustry = result.getParcelable<Industry>("selected_industries")
+            if (selectedIndustry != null) {
+                handleSelectedIndustries(selectedIndustry)
+            }
+        }
+
         setupListeners()
+    }
+
+    private fun handleSelectedIndustries(industry: Industry) {
+        println("FilterFragment Получена отрасль: ${industry.name}")
     }
 
     override fun onResume() {
@@ -81,7 +95,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun navigateToIndustryFragment() {
-        findNavController().navigate(R.id.action_filterFragment_to_industryFragment)
+        findNavController().navigate(R.id.action_filterFragment_to_industriesFragment)
     }
 
     private fun resetButtonClickListener() {
