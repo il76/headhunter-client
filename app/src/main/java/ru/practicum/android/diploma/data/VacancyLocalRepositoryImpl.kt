@@ -14,7 +14,7 @@ class VacancyLocalRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val vacancyDbConverter: VacancyDbConverter
 ) : VacancyLocalRepository {
-    override fun getAll(): Flow<Resource<VacancySearchResult>> {
+    override suspend fun getAll(): Flow<Resource<VacancySearchResult>> {
         return appDatabase.vacancyDao().getVacancies()
             .map { vacancies ->
                 val vacancyList = vacancies.map { vacancyDbConverter.map(it) }
@@ -30,7 +30,7 @@ class VacancyLocalRepositoryImpl(
             }
     }
 
-    override fun getVacancyDetails(vacancyId: String): Flow<Resource<Vacancy>> {
+    override suspend fun getVacancyDetails(vacancyId: String): Flow<Resource<Vacancy>> {
         return appDatabase.vacancyDao().getVacancyDetails(vacancyId)
             .map { vacancyEntity ->
                 Resource.Success(vacancyDbConverter.map(vacancyEntity)) as Resource<Vacancy>
@@ -38,5 +38,13 @@ class VacancyLocalRepositoryImpl(
             .catch { e ->
                 emit(Resource.Error("Failed to load vacancy details: ${e.message}"))
             }
+    }
+
+    override suspend fun saveVacancy(vacancy: Vacancy) {
+        appDatabase.vacancyDao().insertVacancy(vacancyDbConverter.map(vacancy))
+    }
+
+    override suspend fun deleteVacancy(vacancyId: String) {
+        appDatabase.vacancyDao().deleteVacancyById(vacancyId)
     }
 }

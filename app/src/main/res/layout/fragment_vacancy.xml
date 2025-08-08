@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_vacancy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -66,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/image_size"
-            android:text="Android-разработчик"
+            tools:text="Android-разработчик"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/backButton" />
@@ -77,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
-            android:text="от 100 000 ₽"
+            tools:text="от 100 000 ₽"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/jobTitle" />
 
@@ -107,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_8"
                 android:textColor="@color/black"
-                android:text="Еда"
+                tools:text="Еда"
                 app:layout_constraintStart_toEndOf="@id/companyLogo"
                 app:layout_constraintTop_toTopOf="@id/companyLogo" />
 
@@ -117,7 +118,7 @@
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Москва"
+                tools:text="Москва"
                 app:layout_constraintStart_toStartOf="@id/companyName"
                 app:layout_constraintTop_toBottomOf="@id/companyName" />
 
@@ -139,7 +140,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
-            android:text="От 1 года до 3 лет"
+            tools:text="От 1 года до 3 лет"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/experienceTitle" />
 
@@ -149,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
-            android:text="Полная занятость, Удаленная работа"
+            tools:text="Полная занятость, Удаленная работа"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/experienceText" />
 
@@ -179,7 +180,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
-            android:text=" • Разрабатывать новую функциональность приложения\n • Помогать с интеграцией нашего SDK в другие приложения\n • Проектировать большие новые модули\n • Писать UI- и unit-тесты\n • Следить за работоспособностью сервиса и устранять технический долг"
+            tools:text=" • Разрабатывать новую функциональность приложения\n • Помогать с интеграцией нашего SDK в другие приложения\n • Проектировать большие новые модули\n • Писать UI- и unit-тесты\n • Следить за работоспособностью сервиса и устранять технический долг"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dutiesTitle" />
@@ -200,7 +201,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
-            android:text=" • 100% Kotlin\n • WebRTC\n • CI по модели Trunk Based Development"
+            tools:text=" • 100% Kotlin\n • WebRTC\n • CI по модели Trunk Based Development"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/requirementsTitle" />
 
@@ -220,7 +221,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
-            android:text=" • сильная команда, с которой можно расти\n • возможность влиять на процесс и результат\n • расширенная программа ДМС: стоматология, обследования, вызов врача на дом и многое другое"
+            tools:text=" • сильная команда, с которой можно расти\n • возможность влиять на процесс и результат\n • расширенная программа ДМС: стоматология, обследования, вызов врача на дом и многое другое"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/conditionsTitle" />
 
@@ -240,11 +241,54 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_16"
-            android:text=" • Знание классических алгоритмов и структуры данных\n • Программирование для Android больше одного года\n • Знание WebRTC"
+            tools:text=" • Знание классических алгоритмов и структуры данных\n • Программирование для Android больше одного года\n • Знание WebRTC"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/skillsTitle" />
-
+        <TextView
+            android:id="@+id/contactsTitle"
+            style="@style/Font22Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:text="@string/vacancy_skills"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/skillsText" />
+        <TextView
+            android:id="@+id/phonesTitle"
+            style="@style/Font22Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:text="@string/vacancy_phones"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contactsTitle" />
+        <TextView
+            android:id="@+id/phonesText"
+            style="@style/Font16Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            tools:text="+79001234567 с 10 до 18"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phonesTitle" />
+        <TextView
+            android:id="@+id/emailTitle"
+            style="@style/Font22Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:text="@string/vacancy_email"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phonesText" />
+        <TextView
+            android:id="@+id/emailText"
+            style="@style/Font16Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            tools:text="pr@company.name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emailTitle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
-
 

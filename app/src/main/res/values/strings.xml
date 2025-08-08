@@ -18,9 +18,9 @@
     <string name="search_hint">Введите запрос</string>
 
     <string name="empty_salary">Зарплата не указана</string>
-    <string name="salary_from">от %1$s %2$s</string>
-    <string name="salary_to">до %1$s %2$s</string>
-    <string name="salary_from_to">от %1$s до %2$s %3$s</string>
+    <string name="salary_from">от %1$d %2$s</string>
+    <string name="salary_to">до %1$d %2$s</string>
+    <string name="salary_from_to">от %1$d %2$s до %3$d %4$s</string>
 
     <!--  Экран Описание вакансии  /-->
     <string name="vacancy_header">Вакансия</string>
@@ -30,8 +30,14 @@
     <string name="vacancy_req">Требования</string>
     <string name="vacancy_conditions">Условия</string>
     <string name="vacancy_skills">Ключевые навыки</string>
+    <string name="vacancy_contacts">Контакты</string>
+    <string name="vacancy_phones">Телефоны</string>
+    <string name="vacancy_email">Email</string>
+
+
 
     <string name="search_no_internet">Нет интернета</string>
+    <string name="search_error">Ошибка при получении данных</string>
     <string name="search_list_fetch_fail">Не удалось получить список вакансий</string>
     <string name="search_no_such_vacancy">Вакансия не найдена или удалена</string>
     <string name="search_total_found">Найдено %d вакансий</string>

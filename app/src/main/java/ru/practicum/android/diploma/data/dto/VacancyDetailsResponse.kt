@@ -11,4 +11,6 @@ data class VacancyDetailsResponse(
     val description: String?,
     val keySkills: List<KeySkill>?,
     val schedule: Schedule?,
+    val contacts: Contacts?,
+
 ) : Response()

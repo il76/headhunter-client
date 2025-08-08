@@ -54,6 +54,23 @@ class FilterFragment : Fragment() {
         setupListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.refreshUpdatedFilter()
+        val currentFilter = viewModel.currentFilter.value
+        val updatedFilter = viewModel.updatedFilter.value
+        setupIndustryView(updatedFilter?.industry)
+        setupSalaryField(updatedFilter?.salary)
+        setupSalaryCheckbox(updatedFilter?.onlyWithSalary)
+        viewModel.updatedFilter.observe(viewLifecycleOwner) { updatedFilter ->
+            binding.btnApplyFilter.isVisible = updatedFilter != currentFilter
+            binding.btnResetFilter.isVisible = updatedFilter != Filter()
+        }
+
+        setupListeners()
+    }
+
     private fun setupListeners() {
         binding.industryContainer.elementButton.setOnClickListener { navigateToIndustryFragment() }
         binding.btnResetFilter.setOnClickListener { resetButtonClickListener() }

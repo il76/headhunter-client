@@ -35,6 +35,7 @@ class IndustriesRepositoryImpl(
                     )
                 )
             }
+
             else -> emit(Resource.Error(response.resultError))
         }
     }

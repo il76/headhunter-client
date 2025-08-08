@@ -3,9 +3,10 @@ package ru.practicum.android.diploma.ui.filter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.practicum.android.diploma.domain.api.SharedPrefInteractor
 import ru.practicum.android.diploma.domain.models.Filter
 
-class FilterViewModel : ViewModel() {
+class FilterViewModel(private val sharedPrefInteractor: SharedPrefInteractor) : ViewModel() {
     private val _currentFilter = MutableLiveData<Filter>()
     val currentFilter: LiveData<Filter> get() = _currentFilter
 
@@ -13,30 +14,26 @@ class FilterViewModel : ViewModel() {
     val updatedFilter: LiveData<Filter> get() = _updatedFilter
 
     init {
-        _currentFilter.value = Filter()
+        _currentFilter.value = sharedPrefInteractor.getFilter()
     }
 
     fun updateFilter(filter: Filter) {
-        _updatedFilter.value = filter
+        sharedPrefInteractor.updateFilter(filter)
+        refreshUpdatedFilter()
     }
 
     fun clearFilterField(field: String) {
-        val currentFilter = _updatedFilter.value
-
-        _updatedFilter.value = when (field) {
-            "industry" -> currentFilter?.copy(industry = null)
-            "salary" -> currentFilter?.copy(salary = null)
-            "onlyWithSalary" -> currentFilter?.copy(onlyWithSalary = false)
-            else -> currentFilter
-        }
+        sharedPrefInteractor.clearFilterField(field)
+        refreshUpdatedFilter()
     }
 
     fun clearFilter() {
+        sharedPrefInteractor.clearFilter()
         refreshUpdatedFilter()
     }
 
     fun refreshUpdatedFilter() {
-        val updatedFilter = Filter()
+        val updatedFilter = sharedPrefInteractor.getFilter()
         _updatedFilter.value = updatedFilter
     }
 }
