@@ -44,9 +44,7 @@ class VacancyFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.favButton.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.favoriteAction()
-            }
+            viewModel.favoriteAction()
         }
     }
 

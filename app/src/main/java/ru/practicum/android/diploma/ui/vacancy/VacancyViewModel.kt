@@ -3,8 +3,10 @@ package ru.practicum.android.diploma.ui.vacancy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.SharingInteractor
 import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
 import ru.practicum.android.diploma.domain.api.VacancyRepository
@@ -126,14 +128,16 @@ class VacancyViewModel(
         }
     }
 
-    suspend fun favoriteAction() {
+    fun favoriteAction() {
         when (val currentState = screenState.value) {
             is VacancyDetailsState.ContentState -> {
                 val isFavorite = _isFavorite.value ?: false
-                if (isFavorite) {
-                    deleteFavoriteVacancy() // Удаляем, если уже в избранном
-                } else {
-                    saveFavoriteVacancy() // Добавляем, если не в избранном
+                viewModelScope.launch {
+                    if (isFavorite) {
+                        deleteFavoriteVacancy() // Удаляем, если уже в избранном
+                    } else {
+                        saveFavoriteVacancy() // Добавляем, если не в избранном
+                    }
                 }
             }
             else -> {
