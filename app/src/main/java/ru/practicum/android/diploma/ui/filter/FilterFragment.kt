@@ -16,6 +16,8 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.domain.models.Filter
 import ru.practicum.android.diploma.domain.models.Industry
+import ru.practicum.android.diploma.util.FILTER_INDUSTRY
+import ru.practicum.android.diploma.util.FILTER_SALARY
 
 class FilterFragment : Fragment() {
 
@@ -51,7 +53,21 @@ class FilterFragment : Fragment() {
             binding.btnResetFilter.isVisible = updatedFilter != Filter()
         }
 
+        parentFragmentManager.setFragmentResultListener(
+            "industry_selection_result",
+            viewLifecycleOwner
+        ) { _, result ->
+            val selectedIndustry = result.getParcelable<Industry>("selected_industries")
+            if (selectedIndustry != null) {
+                handleSelectedIndustries(selectedIndustry)
+            }
+        }
+
         setupListeners()
+    }
+
+    private fun handleSelectedIndustries(industry: Industry) {
+        println("FilterFragment Получена отрасль: ${industry.name}")
     }
 
     override fun onResume() {
@@ -79,7 +95,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun navigateToIndustryFragment() {
-        findNavController().navigate(R.id.action_filterFragment_to_industryFragment)
+        findNavController().navigate(R.id.action_filterFragment_to_industriesFragment)
     }
 
     private fun resetButtonClickListener() {
@@ -120,7 +136,7 @@ class FilterFragment : Fragment() {
     private fun setupIndustryView(industry: Industry?) {
         updateIndustryView(industry) { industry ->
             binding.industryContainer.elementButton.setOnClickListener {
-                viewModel.clearFilterField("industry")
+                viewModel.clearFilterField(FILTER_INDUSTRY)
                 updateIndustryView(null)
             }
         }
@@ -153,7 +169,7 @@ class FilterFragment : Fragment() {
             binding.salaryEditText.setText("")
             binding.salaryEditText.clearFocus()
             hideKeyboard(binding.root, requireContext())
-            viewModel.clearFilterField("salary")
+            viewModel.clearFilterField(FILTER_SALARY)
         }
 
         binding.salaryEditText.setOnEditorActionListener { v, actionId, event ->

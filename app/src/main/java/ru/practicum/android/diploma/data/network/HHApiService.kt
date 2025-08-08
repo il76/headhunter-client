@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.data.network
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.practicum.android.diploma.data.dto.IndustriesResponse
+import ru.practicum.android.diploma.data.dto.IndustryDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailsResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 
@@ -22,5 +22,5 @@ interface HHApiService {
     suspend fun getVacancyDetails(@Path("vacancyId") vacancyId: String): VacancyDetailsResponse
 
     @GET("industries")
-    suspend fun getIndustries(): IndustriesResponse
+    suspend fun getIndustries(): List<IndustryDto>
 }

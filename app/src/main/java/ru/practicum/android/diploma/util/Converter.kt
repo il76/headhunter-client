@@ -53,8 +53,4 @@ object Converter {
             }
         }
     }
-
-//    private fun formatNumber(number: Int): String {
-//        return NumberFormat.getInstance().format(number)
-//    }
 }

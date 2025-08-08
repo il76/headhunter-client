@@ -2,6 +2,8 @@ package ru.practicum.android.diploma.data.network
 
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.IndustriesRequest
+import ru.practicum.android.diploma.data.dto.IndustriesResponse
+import ru.practicum.android.diploma.data.dto.IndustryDto
 import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacancyDetailsRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
@@ -24,10 +26,36 @@ class RetrofitNetworkClient(
                 )
             }
             is VacancyDetailsRequest -> makeRequest { hhService.getVacancyDetails(dto.vacancyId) }
-            is IndustriesRequest -> makeRequest { hhService.getIndustries() }
             else -> Response().apply {
                 resultCode = BAD_REQUEST_CODE
                 resultError = "Invalid request type"
+            }
+        }
+    }
+
+    override suspend fun doRequestForIndustries(dto: IndustriesRequest): Response {
+        return try {
+            val data = withContext(Dispatchers.IO) { hhService.getIndustries() }
+            IndustriesResponse(
+                industries = data.map { industriesResponse ->
+                    IndustryDto(
+                        id = industriesResponse.id,
+                        name = industriesResponse.name
+                    )
+                }
+            ).apply {
+                resultCode = HTTP_SUCCESS_CODE
+                resultError = ""
+            }
+        } catch (e: IOException) {
+            Response().apply {
+                resultCode = NETWORK_ERROR_CODE
+                resultError = "Network error: ${e.localizedMessage}"
+            }
+        } catch (e: HttpException) {
+            Response().apply {
+                resultCode = e.code()
+                resultError = "HTTP error: ${e.message()}"
             }
         }
     }
