@@ -62,7 +62,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun navigateToIndustryFragment() {
-        findNavController().navigate(R.id.action_filterFragment_to_industryFragment)
+        findNavController().navigate(R.id.action_filterFragment_to_industriesFragment)
     }
 
     private fun resetButtonClickListener() {

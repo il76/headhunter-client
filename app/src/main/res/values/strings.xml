@@ -44,4 +44,8 @@
     <string name="filter_apply">Применить</string>
     <string name="filter_reset">Сбросить</string>
 
+    <!--  Экран Выбор отрасли  /-->
+    <string name="industries_title">Выбор отрасли</string>
+    <string name="search_industry_hint">Введите отрасль</string>
+
 </resources>
