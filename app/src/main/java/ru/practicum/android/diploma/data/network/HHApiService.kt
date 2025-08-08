@@ -13,6 +13,7 @@ interface HHApiService {
         @Query("text") text: String,
         @Query("page") page: String = "1",
         @Query("area") area: String? = null,
+        @Query("industry") industry: String? = null,
         @Query("salary") salary: Long? = null,
         @Query("only_with_salary") onlyWithSalary: Boolean = false,
     ): VacancySearchResponse

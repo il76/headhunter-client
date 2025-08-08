@@ -18,6 +18,7 @@ class RetrofitNetworkClient(
                     dto.text,
                     dto.page.toString(),
                     area = dto.area,
+                    industry = dto.industry,
                     salary = dto.salary,
                     onlyWithSalary = dto.onlyWithSalary
                 )

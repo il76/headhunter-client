@@ -13,6 +13,7 @@ class VacancyInteractorImpl(private val repository: VacancyRepository) : Vacancy
         page: Int,
         onlyWithSalary: Boolean,
         area: String?,
+        industry: String?,
         salary: Long?
     ): Flow<Resource<VacancySearchResult>> {
         return repository.search(
@@ -20,6 +21,7 @@ class VacancyInteractorImpl(private val repository: VacancyRepository) : Vacancy
             page = page,
             onlyWithSalary = onlyWithSalary,
             area = area,
+            industry = industry,
             salary = salary,
         )
     }

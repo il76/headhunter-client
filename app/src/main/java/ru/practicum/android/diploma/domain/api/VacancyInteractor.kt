@@ -11,6 +11,7 @@ interface VacancyInteractor {
         page: Int = 0,
         onlyWithSalary: Boolean = false,
         area: String?,
+        industry: String?,
         salary: Long?
     ): Flow<Resource<VacancySearchResult>>
 

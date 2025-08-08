@@ -11,6 +11,7 @@ interface VacancyRepository {
         page: Int = 0,
         onlyWithSalary: Boolean = false,
         area: String? = null,
+        industry: String? = null,
         salary: Long? = null,
     ): Flow<Resource<VacancySearchResult>>
 

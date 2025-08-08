@@ -21,15 +21,17 @@ class VacancyRepositoryImpl(
         page: Int,
         onlyWithSalary: Boolean,
         area: String?,
+        industry: String?,
         salary: Long?
     ): Flow<Resource<VacancySearchResult>> = flow {
         val response = networkClient.doRequest(
             VacancySearchRequest(
                 text = query,
                 page = page,
-                area = area,
-                salary = salary,
                 onlyWithSalary = onlyWithSalary,
+                area = area,
+                industry = industry,
+                salary = salary,
             )
         )
         when (response.resultCode) {

@@ -5,5 +5,6 @@ data class VacancySearchRequest(
     val page: Int,
     val onlyWithSalary: Boolean = false,
     val area: String? = null,
+    val industry: String? = null,
     val salary: Long? = null,
 )
