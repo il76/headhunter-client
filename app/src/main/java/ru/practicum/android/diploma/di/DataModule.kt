@@ -15,11 +15,14 @@ import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.ui.sharing.ExternalNavigator
 import ru.practicum.android.diploma.ui.sharing.ExternalNavigatorImpl
+import ru.practicum.android.diploma.util.APP_DATA_BASE
+import ru.practicum.android.diploma.util.APP_SHARED_PREFS
+import ru.practicum.android.diploma.util.HH_BASE_URL
 
 val dataModule = module {
     single {
         androidContext()
-            .getSharedPreferences("hh_preferences", Context.MODE_PRIVATE)
+            .getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE)
     }
 
     factory {
@@ -34,14 +37,14 @@ val dataModule = module {
 
     single<HHApiService> {
         Retrofit.Builder()
-            .baseUrl("https://api.hh.ru")
+            .baseUrl(HH_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(HHApiService::class.java)
     }
 
     single {
-        databaseBuilder(androidContext(), AppDatabase::class.java, "hh.db")
+        databaseBuilder(androidContext(), AppDatabase::class.java, APP_DATA_BASE)
             .fallbackToDestructiveMigration() // на время отладки, чтобы не писать постоянно миграции
             .addTypeConverter(get<Converters>())
             .build()
