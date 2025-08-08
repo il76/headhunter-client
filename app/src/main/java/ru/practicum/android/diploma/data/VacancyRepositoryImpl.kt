@@ -45,7 +45,7 @@ class VacancyRepositoryImpl(
                                 Vacancy(
                                     id = it.id,
                                     name = it.name,
-                                    logoUrl = it.employer?.logoUrls?.original.toString(),
+                                    logoUrl = it.employer?.logoUrls?.original ?: "",
                                     areaName = it.area?.name ?: "",
                                     employerName = it.employer?.name ?: "",
                                     salaryCurrency = it.salary?.currency ?: "",
@@ -68,31 +68,30 @@ class VacancyRepositoryImpl(
         when (response.resultCode) {
             NO_INTERNET -> emit(VacancyDetailsState.ConnectionError)
             REQUEST_OK -> {
-                emit(
-                    VacancyDetailsState.ContentState(
-                        with(response as VacancyDetailsResponse) {
-                            Vacancy(
-                                id = this.id,
-                                name = this.name,
-                                logoUrl = this.employer?.logoUrls?.original.toString(),
-                                areaName = this.area?.name ?: "",
-                                employment = this.employer?.name ?: "",
-                                salaryTo = this.salary?.to,
-                                salaryFrom = this.salary?.from,
-                                experience = this.experience?.name ?: "",
-                                description = this.description ?: "",
-                                keySkills = this.keySkills?.map { keySkill -> keySkill.name },
-                                employerName = this.employer?.name ?: "",
-                                salaryCurrency = this.salary?.currency ?: "",
-                                schedule = this.schedule?.name,
-                                contacts = this.contacts,
-                            )
-                        }
-                    )
-                )
+                val vacancy = createVacancyFromResponse(response as VacancyDetailsResponse)
+                emit(VacancyDetailsState.ContentState(vacancy))
             }
             else -> emit(VacancyDetailsState.NetworkErrorState(response.resultError))
         }
+    }
+
+    private fun createVacancyFromResponse(response: VacancyDetailsResponse): Vacancy {
+        return Vacancy(
+            id = response.id,
+            name = response.name,
+            logoUrl = response.employer?.logoUrls?.original ?: "",
+            areaName = response.area?.name ?: "",
+            employment = response.employer?.name ?: "",
+            salaryTo = response.salary?.to,
+            salaryFrom = response.salary?.from,
+            experience = response.experience?.name ?: "",
+            description = response.description ?: "",
+            keySkills = response.keySkills?.map { it.name },
+            employerName = response.employer?.name ?: "",
+            salaryCurrency = response.salary?.currency ?: "",
+            schedule = response.schedule?.name,
+            contacts = response.contacts
+        )
     }
 
     companion object {

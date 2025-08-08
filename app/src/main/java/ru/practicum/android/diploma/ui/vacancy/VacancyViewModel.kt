@@ -29,6 +29,19 @@ class VacancyViewModel(
     private var id = -1
     private var loadedFromNetwork = false // Флаг, откуда загружены данные
 
+    fun getVacancy(vacancyId: Int, useDB: Boolean = false) {
+        viewModelScope.launch {
+            try {
+                loadVacancy(vacancyId, useDB)
+            } catch (e: VacancyNotFoundException) {
+                deleteFavoriteVacancy()
+                _screenState.value = VacancyDetailsState.EmptyState(e.message.toString())
+            } catch (e: VacancyErrorException) {
+                _screenState.value = VacancyDetailsState.NetworkErrorState(e.message.toString())
+            }
+        }
+    }
+
     suspend fun loadVacancy(vacancyId: Int, useDB: Boolean = false): Vacancy {
         id = vacancyId
         loadedFromNetwork = !useDB // Запоминаем, откуда загружаем
@@ -59,7 +72,7 @@ class VacancyViewModel(
                 state.vacancy
             }
             else -> throw when (state) {
-                is VacancyDetailsState.EmptyState -> VacancyErrorException("Vacancy not found")
+                is VacancyDetailsState.EmptyState -> VacancyNotFoundException(state.message)
                 is VacancyDetailsState.NetworkErrorState -> VacancyErrorException(state.message)
                 is VacancyDetailsState.ServerError -> VacancyErrorException("Server error")
                 is VacancyDetailsState.ConnectionError -> VacancyErrorException("No internet")
@@ -111,31 +124,6 @@ class VacancyViewModel(
         }
     }
 
-    // Новый метод для загрузки избранной вакансии
-    suspend fun loadFavoriteVacancy(vacancyId: String) {
-        try {
-            val result = localRepository.getVacancyDetails(vacancyId).first()
-            when (result) {
-                is Resource.Success -> {
-                    result.data?.let {
-                        _screenState.value = VacancyDetailsState.ContentState(it)
-                        _isFavorite.value = true
-                    } ?: run {
-                        _screenState.value = VacancyDetailsState.EmptyState
-                        _isFavorite.value = false
-                    }
-                }
-                is Resource.Error -> {
-                    _screenState.value = VacancyDetailsState.NetworkErrorState(result.message ?: "DB Error")
-                    _isFavorite.value = false
-                }
-            }
-        } catch (e: VacancyErrorException) {
-            _screenState.value = VacancyDetailsState.NetworkErrorState(e.message ?: "Error loading favorite")
-            _isFavorite.value = false
-        }
-    }
-
     fun favoriteAction() {
         when (val currentState = screenState.value) {
             is VacancyDetailsState.ContentState -> {
@@ -156,3 +144,4 @@ class VacancyViewModel(
 }
 
 class VacancyErrorException(message: String) : Exception(message)
+class VacancyNotFoundException(message: String) : Exception(message)

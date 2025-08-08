@@ -14,11 +14,9 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.Phone
@@ -43,9 +41,7 @@ class VacancyFragment : Fragment() {
         val vacancyId = arguments?.getInt(VACANCY_ID, 0) ?: 0
         val useDB = arguments?.getBoolean(ARG_USE_LOCAL_DB) ?: false
         initializeObservers()
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loadVacancy(vacancyId, useDB)
-        }
+        viewModel.getVacancy(vacancyId, useDB)
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -64,10 +60,10 @@ class VacancyFragment : Fragment() {
             when (screenState) {
                 is VacancyDetailsState.ContentState -> showContent(screenState)
                 VacancyDetailsState.ConnectionError -> showErrorVacancyNotFound()
-                VacancyDetailsState.EmptyState -> TODO()
+                is VacancyDetailsState.EmptyState -> showErrorVacancyNotFound()
                 VacancyDetailsState.LoadingState -> showLoading()
                 VacancyDetailsState.ServerError -> showErrorServer()
-                is VacancyDetailsState.NetworkErrorState -> TODO()
+                is VacancyDetailsState.NetworkErrorState -> showErrorServer()
             }
         }
         viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
@@ -109,11 +105,36 @@ class VacancyFragment : Fragment() {
     }
 
     private fun showErrorVacancyNotFound() {
-        TODO()
+        hideContent()
+        binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_nothing_found)
+        binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_no_such_vacancy)
+        binding.includeErrorBlock.errorBlock.isVisible = true
     }
 
     private fun showErrorServer() {
-        TODO()
+        hideContent()
+        binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_server_error_vacancy)
+        binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_error)
+        binding.includeErrorBlock.errorBlock.isVisible = true
+    }
+
+    private fun hideContent() {
+        // мне очень не нравится этот код, но без перевёрстывания иначе было быстро не сделать
+        binding.container.isVisible = true
+        binding.progressBar.isVisible = false
+        binding.companyCard.isVisible = false
+        binding.experienceTitle.isVisible = false
+        binding.experienceText.isVisible = false
+        binding.contactsTitle.isVisible = false
+        binding.emailText.isVisible = false
+        binding.phonesText.isVisible = false
+        binding.employmentText.isVisible = false
+        binding.descriptionText.isVisible = false
+        binding.descriptionTitle.isVisible = false
+        binding.emailTitle.isVisible = false
+        binding.phonesTitle.isVisible = false
+        binding.skillsTitle.isVisible = false
+        binding.skillsText.isVisible = false
     }
 
     private fun showLoading() {

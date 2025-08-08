@@ -98,7 +98,7 @@ class SearchViewModel(
             val vacancies = repository.search(
                 _state.value.searchQuery,
                 page,
-                onlyWithSalary = filter.onlyWithSalary == false,
+                onlyWithSalary = filter.onlyWithSalary ?: false,
                 industry = filter.industry?.id,
                 salary = filter.salary?.toLong(),
             ).first()
