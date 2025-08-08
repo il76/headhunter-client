@@ -1,7 +1,9 @@
 package ru.practicum.android.diploma.ui.filter
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +59,13 @@ class FilterFragment : Fragment() {
             "industry_selection_result",
             viewLifecycleOwner
         ) { _, result ->
-            val selectedIndustry = result.getParcelable<Industry>("selected_industries")
+            @Suppress("DEPRECATION")
+            val selectedIndustry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                result.getParcelable("selected_industries", Industry::class.java)
+            } else {
+                result.getParcelable("selected_industries") as? Industry
+            }
+            Log.i("ss", selectedIndustry.toString())
             if (selectedIndustry != null) {
                 handleSelectedIndustries(selectedIndustry)
             }
@@ -67,7 +75,9 @@ class FilterFragment : Fragment() {
     }
 
     private fun handleSelectedIndustries(industry: Industry) {
-        println("FilterFragment Получена отрасль: ${industry.name}")
+        println("FilterFragment Получена отрасль: $industry")
+        binding.industryContainer.value.text = industry.name
+        viewModel.updateFilter(Filter(industry = industry))
     }
 
     override fun onResume() {

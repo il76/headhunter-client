@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -89,10 +90,10 @@ class IndustriesFragment : Fragment() {
         viewModel.loadIndustries()
 
         binding.btnApplyIndustries.setOnClickListener {
-            val result = Bundle().apply {
-                putParcelable("selected_industries", viewModel.selectedIndustry)
-            }
-            setFragmentResult("industry_selection_result", result)
+            setFragmentResult(
+                "industry_selection_result",
+                bundleOf("selected_industries" to viewModel.selectedIndustry)
+            )
 
             findNavController().popBackStack()
         }
