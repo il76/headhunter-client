@@ -3,10 +3,13 @@ package ru.practicum.android.diploma.di
 import android.content.Context
 import androidx.room.Room.databaseBuilder
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.db.Converters
 import ru.practicum.android.diploma.data.db.VacancyDbConverter
@@ -35,9 +38,26 @@ val dataModule = module {
         RetrofitNetworkClient(get())
     }
 
+    single {
+        HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
+    }
+
+    single {
+        OkHttpClient.Builder()
+            .addInterceptor(get<HttpLoggingInterceptor>()) // Логирование
+            .build()
+    }
+
     single<HHApiService> {
         Retrofit.Builder()
             .baseUrl(HH_BASE_URL)
+            .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(HHApiService::class.java)

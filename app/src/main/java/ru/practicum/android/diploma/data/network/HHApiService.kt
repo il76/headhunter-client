@@ -8,10 +8,14 @@ import ru.practicum.android.diploma.data.dto.VacancyDetailsResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 
 interface HHApiService {
-    @GET("vacancies?")
+    @GET("vacancies")
     suspend fun getVacancies(
-        @Query("text", encoded = false) text: String,
-        @Query("page", encoded = false) page: String
+        @Query("text") text: String,
+        @Query("page") page: String = "1",
+        @Query("area") area: String? = null,
+        @Query("industry") industry: String? = null,
+        @Query("salary") salary: Long? = null,
+        @Query("only_with_salary") onlyWithSalary: Boolean = false,
     ): VacancySearchResponse
 
     @GET("vacancies/{vacancyId}")

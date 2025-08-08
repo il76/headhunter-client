@@ -17,7 +17,16 @@ class RetrofitNetworkClient(
 
     override suspend fun doRequest(dto: Any): Response {
         return when (dto) {
-            is VacancySearchRequest -> makeRequest { hhService.getVacancies(dto.text, dto.page.toString()) }
+            is VacancySearchRequest -> makeRequest {
+                hhService.getVacancies(
+                    dto.text,
+                    dto.page.toString(),
+                    area = dto.area,
+                    industry = dto.industry,
+                    salary = dto.salary,
+                    onlyWithSalary = dto.onlyWithSalary
+                )
+            }
             is VacancyDetailsRequest -> makeRequest { hhService.getVacancyDetails(dto.vacancyId) }
             else -> Response().apply {
                 resultCode = BAD_REQUEST_CODE

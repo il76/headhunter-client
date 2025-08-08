@@ -15,6 +15,6 @@ data class Vacancy(
     val employment: String? = null,
     val description: String? = null,
     val keySkills: List<String>? = null,
-    val schedule: String?,
-    val contacts: Contacts?,
+    val schedule: String? = null,
+    val contacts: Contacts? = null,
 )
