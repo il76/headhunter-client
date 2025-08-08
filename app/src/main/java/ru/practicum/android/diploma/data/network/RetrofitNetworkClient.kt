@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.data.network
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.IndustriesRequest
 import ru.practicum.android.diploma.data.dto.IndustriesResponse
