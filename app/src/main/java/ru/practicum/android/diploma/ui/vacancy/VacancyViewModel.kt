@@ -79,6 +79,14 @@ class VacancyViewModel(
         sharingInteractor.share(url)
     }
 
+    fun openEmailApp(email: String) {
+        sharingInteractor.openEmailApp(email)
+    }
+
+    fun openCallerApp(phone: String) {
+        sharingInteractor.openCallerApp(phone)
+    }
+
     suspend fun saveFavoriteVacancy() {
         when (val currentState = screenState.value) {
             is VacancyDetailsState.ContentState -> {

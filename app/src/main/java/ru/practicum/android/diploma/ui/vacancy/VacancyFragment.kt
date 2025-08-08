@@ -1,7 +1,13 @@
 package ru.practicum.android.diploma.ui.vacancy
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -180,6 +186,9 @@ class VacancyFragment : Fragment() {
             binding.emailTitle.isVisible = true
             binding.emailText.isVisible = true
             binding.emailText.text = email
+            binding.emailText.setOnClickListener {
+                viewModel.openEmailApp(email)
+            }
         }
         if (phones.isNullOrEmpty()) {
             binding.phonesTitle.isVisible = false
@@ -187,13 +196,48 @@ class VacancyFragment : Fragment() {
         } else {
             binding.phonesTitle.isVisible = true
             binding.phonesText.isVisible = true
-            val phonesText = phones.joinToString("\n") { phone ->
-                val commentPart = phone.comment?.let { " ($it)" } ?: ""
-                "+${phone.country} ${phone.city} ${phone.number}$commentPart"
-            }
-            binding.phonesText.text = phonesText
+            showClickablePhones(phones)
         }
         binding.contactsTitle.isVisible = !(email.isNullOrEmpty() && phones.isNullOrEmpty())
+    }
+
+    private fun showClickablePhones(phones: List<Phone>) {
+        val phonesText = SpannableStringBuilder()
+
+        phones.forEach { phone ->
+            val commentPart = phone.comment?.let { " ($it)" } ?: ""
+            val phoneNumber = "+${phone.country} ${phone.city} ${phone.number}"
+            val phoneText = "$phoneNumber$commentPart"
+
+            val start = phonesText.length
+            phonesText.append(phoneText)
+            val end = phonesText.length
+
+            phonesText.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        viewModel.openCallerApp(phoneNumber)
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = ds.linkColor
+                        ds.isUnderlineText = false
+                    }
+                },
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            if (phone != phones.last()) {
+                phonesText.append("\n")
+            }
+        }
+
+        binding.phonesText.text = phonesText
+        binding.phonesText.movementMethod = LinkMovementMethod.getInstance()
+        binding.phonesText.highlightColor = Color.TRANSPARENT
     }
 
     companion object {
