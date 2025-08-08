@@ -95,7 +95,7 @@ class SearchFragment : Fragment() {
         // обновлять выборку нужно только при нажатии на кнопку "Применить", но не на стрелку "Назад"
         parentFragmentManager.setFragmentResultListener(REQUEST_KEY, viewLifecycleOwner) { requestKey, bundle ->
             val shouldRefresh = bundle.getBoolean(KEY_SHOULD_REFRESH, false)
-            if (shouldRefresh) {
+            if (shouldRefresh && binding.searchEditText.text.isNotBlank()) {
                 viewModel.refresh()
             }
         }
