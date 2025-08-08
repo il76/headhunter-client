@@ -1,11 +1,13 @@
 package ru.practicum.android.diploma.ui.filter
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -85,18 +87,26 @@ class IndustriesFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-
-        viewModel.loadIndustries()
+        @Suppress("DEPRECATION")
+        val selectedIndustry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(FilterFragment.PARAM_INDUSTRIES, Industry::class.java)
+        } else {
+            arguments?.getParcelable(FilterFragment.PARAM_INDUSTRIES) as? Industry
+        }
+        viewModel.loadIndustries(selectedIndustry)
 
         binding.btnApplyIndustries.setOnClickListener {
-            val result = Bundle().apply {
-                putParcelable("selected_industries", viewModel.selectedIndustry)
-            }
-            setFragmentResult("industry_selection_result", result)
+            setFragmentResult(
+                FilterFragment.PARAM_INDUSTRIES_SELECTION,
+                bundleOf(FilterFragment.PARAM_INDUSTRIES to viewModel.selectedIndustry)
+            )
 
             findNavController().popBackStack()
         }
         binding.searchIndustryEditText.addTextChangedListener(textWatcher)
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         super.onViewCreated(view, savedInstanceState)
     }

@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
     id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
