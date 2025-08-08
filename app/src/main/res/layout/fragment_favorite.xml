@@ -21,13 +21,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white_day_black_night"
-            android:paddingHorizontal="16dp">
+            android:paddingHorizontal="@dimen/margin_16">
 
             <TextView
                 style="@style/Font22Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/margin_16"
                 android:text="@string/favourites"
                 android:textColor="@color/black_day_white_night" />
 
@@ -36,10 +36,10 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="@dimen/progressbar_size"
+        android:layout_height="@dimen/progressbar_size"
         android:layout_gravity="center"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="@dimen/progressbar_margintop"
         android:indeterminateTint="@color/blue"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,8 +67,8 @@
             android:id="@+id/vacancy_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="16dp"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginVertical="@dimen/margin_16"
             android:layout_weight="1"
             android:padding="0dp"
             tools:listitem="@layout/vacancy_search_item" />
