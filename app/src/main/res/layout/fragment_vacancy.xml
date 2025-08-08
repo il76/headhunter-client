@@ -155,7 +155,7 @@
             app:layout_constraintTop_toBottomOf="@id/experienceText" />
 
         <TextView
-            android:id="@+id/descTitle"
+            android:id="@+id/descriptionTitle"
             style="@style/Font22Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -163,67 +163,15 @@
             android:text="@string/vacancy_desc"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/employmentText" />
-
         <TextView
-            android:id="@+id/dutiesTitle"
-            style="@style/Font16Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
-            android:text="@string/vacancy_duties"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/descTitle" />
-
-        <TextView
-            android:id="@+id/dutiesText"
-            style="@style/Font16Regular"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_4"
-            tools:text=" • Разрабатывать новую функциональность приложения\n • Помогать с интеграцией нашего SDK в другие приложения\n • Проектировать большие новые модули\n • Писать UI- и unit-тесты\n • Следить за работоспособностью сервиса и устранять технический долг"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dutiesTitle" />
-
-        <TextView
-            android:id="@+id/requirementsTitle"
-            style="@style/Font16Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
-            android:text="@string/vacancy_req"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dutiesText" />
-
-        <TextView
-            android:id="@+id/requirementsText"
-            style="@style/Font16Regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_4"
-            tools:text=" • 100% Kotlin\n • WebRTC\n • CI по модели Trunk Based Development"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/requirementsTitle" />
-
-        <TextView
-            android:id="@+id/conditionsTitle"
-            style="@style/Font16Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
-            android:text="@string/vacancy_conditions"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/requirementsText" />
-
-        <TextView
-            android:id="@+id/conditionsText"
+            android:id="@+id/descriptionText"
             style="@style/Font16Regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_4"
             tools:text=" • сильная команда, с которой можно расти\n • возможность влиять на процесс и результат\n • расширенная программа ДМС: стоматология, обследования, вызов врача на дом и многое другое"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/conditionsTitle" />
+            app:layout_constraintTop_toBottomOf="@id/descriptionTitle" />
 
         <TextView
             android:id="@+id/skillsTitle"
@@ -233,7 +181,7 @@
             android:layout_marginTop="@dimen/margin_24"
             android:text="@string/vacancy_skills"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/conditionsText" />
+            app:layout_constraintTop_toBottomOf="@id/descriptionText" />
 
         <TextView
             android:id="@+id/skillsText"
@@ -250,7 +198,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_24"
-            android:text="@string/vacancy_skills"
+            android:text="@string/vacancy_contacts"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/skillsText" />
         <TextView

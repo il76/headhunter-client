@@ -89,7 +89,7 @@ class VacancyFragment : Fragment() {
                 requireContext()
             )
         binding.companyName.text = vacancyFull.employerName
-        binding.descTitle.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
+        binding.descriptionText.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
 
         showExperience(vacancyFull.experience)
         showLogo(vacancyFull.logoUrl)
@@ -193,6 +193,7 @@ class VacancyFragment : Fragment() {
             }
             binding.phonesText.text = phonesText
         }
+        binding.contactsTitle.isVisible = !(email.isNullOrEmpty() && phones.isNullOrEmpty())
     }
 
     companion object {
