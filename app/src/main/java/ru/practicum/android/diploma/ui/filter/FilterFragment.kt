@@ -12,12 +12,14 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.domain.models.Filter
 import ru.practicum.android.diploma.domain.models.Industry
+import ru.practicum.android.diploma.ui.search.SearchFragment
 import ru.practicum.android.diploma.util.FILTER_INDUSTRY
 import ru.practicum.android.diploma.util.FILTER_SALARY
 
@@ -145,6 +147,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun submitFilter() {
+        setFragmentResult(SearchFragment.REQUEST_KEY, bundleOf(SearchFragment.KEY_SHOULD_REFRESH to true))
         findNavController().navigateUp()
     }
 
