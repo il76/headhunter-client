@@ -53,5 +53,6 @@
     <!--  Экран Выбор отрасли  /-->
     <string name="industries_title">Выбор отрасли</string>
     <string name="search_industry_hint">Введите отрасль</string>
+    <string name="industries_apply">Выбрать</string>
 
 </resources>

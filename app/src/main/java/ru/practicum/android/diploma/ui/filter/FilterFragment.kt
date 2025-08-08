@@ -51,7 +51,21 @@ class FilterFragment : Fragment() {
             binding.btnResetFilter.isVisible = updatedFilter != Filter()
         }
 
+        parentFragmentManager.setFragmentResultListener(
+            "industry_selection_result",
+            viewLifecycleOwner
+        ) { _, result ->
+            val selectedIndustry = result.getParcelable<Industry>("selected_industries")
+            if (selectedIndustry != null) {
+                handleSelectedIndustries(selectedIndustry)
+            }
+        }
+
         setupListeners()
+    }
+
+    private fun handleSelectedIndustries(industry: Industry) {
+        println("FilterFragment Получена отрасль: ${industry.name}")
     }
 
     override fun onResume() {
