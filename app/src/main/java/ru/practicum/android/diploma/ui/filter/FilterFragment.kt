@@ -16,6 +16,8 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.domain.models.Filter
 import ru.practicum.android.diploma.domain.models.Industry
+import ru.practicum.android.diploma.util.FILTER_INDUSTRY
+import ru.practicum.android.diploma.util.FILTER_SALARY
 
 class FilterFragment : Fragment() {
 
@@ -120,7 +122,7 @@ class FilterFragment : Fragment() {
     private fun setupIndustryView(industry: Industry?) {
         updateIndustryView(industry) { industry ->
             binding.industryContainer.elementButton.setOnClickListener {
-                viewModel.clearFilterField("industry")
+                viewModel.clearFilterField(FILTER_INDUSTRY)
                 updateIndustryView(null)
             }
         }
@@ -153,7 +155,7 @@ class FilterFragment : Fragment() {
             binding.salaryEditText.setText("")
             binding.salaryEditText.clearFocus()
             hideKeyboard(binding.root, requireContext())
-            viewModel.clearFilterField("salary")
+            viewModel.clearFilterField(FILTER_SALARY)
         }
 
         binding.salaryEditText.setOnEditorActionListener { v, actionId, event ->

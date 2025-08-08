@@ -33,7 +33,8 @@ val repositoryModule = module {
 
     single<SharedPrefRepository> {
         SharedPrefRepositoryImpl(
-            sharedPreferences = get()
+            sharedPreferences = get(),
+            gson = get()
         )
     }
 }

@@ -253,9 +253,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun renderFilterState(isChecked: Boolean) {
-        when (isChecked) {
-            true -> binding.filterIcon.setImageResource(R.drawable.ic_filters_on)
-            false -> binding.filterIcon.setImageResource(R.drawable.ic_filters_off)
+        if (isChecked) {
+            binding.filterIcon.setImageResource(R.drawable.ic_filters_on)
+        } else {
+            binding.filterIcon.setImageResource(R.drawable.ic_filters_off)
         }
     }
 
