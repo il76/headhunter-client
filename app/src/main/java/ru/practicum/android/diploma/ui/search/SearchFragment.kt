@@ -214,7 +214,7 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = false
         binding.vacancyList.isVisible = true
         binding.searchTotalFound.isVisible = true
-        // binding.errorBlock.isVisible = false
+        binding.includeErrorBlock.errorBlock.isVisible = false
     }
 
     // догрузка начата

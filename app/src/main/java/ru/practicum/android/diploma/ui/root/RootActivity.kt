@@ -10,7 +10,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ActivityRootBinding
 
@@ -34,20 +33,13 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController.also {
             it.addOnDestinationChangedListener { controller, destination, arguments ->
                 binding.bottomNavigationView.isVisible = when (destination.id) {
-                    R.id.filterFragment, R.id.vacancyFragment -> false
+                    R.id.filterFragment, R.id.vacancyFragment, R.id.industriesFragment -> false
                     else -> true
                 }
             }
         }
 
         binding.bottomNavigationView.setupWithNavController(navController)
-
-        // Пример использования access token для HeadHunter API
-        networkRequestExample(accessToken = BuildConfig.HH_ACCESS_TOKEN)
-    }
-
-    private fun networkRequestExample(accessToken: String) {
-        // ...
     }
 
 }

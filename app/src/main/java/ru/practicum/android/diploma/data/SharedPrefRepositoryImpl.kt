@@ -23,18 +23,11 @@ class SharedPrefRepositoryImpl(private val sharedPreferences: SharedPreferences,
     }
 
     override fun updateFilter(updatedFilter: Filter) {
-        val currentFilter = getFilter()
-
         val mergedFilter = Filter(
-            industry = updatedFilter.industry ?: currentFilter.industry,
-            salary = updatedFilter.salary ?: currentFilter.salary,
-            onlyWithSalary = if (updatedFilter.onlyWithSalary == false) {
-                currentFilter.onlyWithSalary
-            } else {
-                updatedFilter.onlyWithSalary
-            }
+            industry = updatedFilter.industry,
+            salary = updatedFilter.salary,
+            onlyWithSalary = updatedFilter.onlyWithSalary
         )
-        println(updatedFilter)
         saveFilter(mergedFilter)
     }
 
