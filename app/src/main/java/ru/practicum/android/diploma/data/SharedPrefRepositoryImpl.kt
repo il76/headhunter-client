@@ -5,10 +5,13 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 import ru.practicum.android.diploma.domain.api.SharedPrefRepository
 import ru.practicum.android.diploma.domain.models.Filter
+import ru.practicum.android.diploma.util.APP_SHARED_PREFS
+import ru.practicum.android.diploma.util.FILTER_INDUSTRY
+import ru.practicum.android.diploma.util.FILTER_ONLY_SALARY
+import ru.practicum.android.diploma.util.FILTER_SALARY
 
-class SharedPrefRepositoryImpl(private val sharedPreferences: SharedPreferences) :
+class SharedPrefRepositoryImpl(private val sharedPreferences: SharedPreferences, private val gson: Gson) :
     SharedPrefRepository {
-    private val gson = Gson()
 
     override fun getFilter(): Filter {
         val jsonString = sharedPreferences.getString(SHARED_FILTER_KEY, null)
@@ -20,18 +23,11 @@ class SharedPrefRepositoryImpl(private val sharedPreferences: SharedPreferences)
     }
 
     override fun updateFilter(updatedFilter: Filter) {
-        val currentFilter = getFilter()
-
         val mergedFilter = Filter(
-            industry = updatedFilter.industry ?: currentFilter.industry,
-            salary = updatedFilter.salary ?: currentFilter.salary,
-            onlyWithSalary = if (updatedFilter.onlyWithSalary == false) {
-                currentFilter.onlyWithSalary
-            } else {
-                updatedFilter.onlyWithSalary
-            }
+            industry = updatedFilter.industry,
+            salary = updatedFilter.salary,
+            onlyWithSalary = updatedFilter.onlyWithSalary
         )
-        println(updatedFilter)
         saveFilter(mergedFilter)
     }
 
@@ -39,9 +35,9 @@ class SharedPrefRepositoryImpl(private val sharedPreferences: SharedPreferences)
         val currentFilter = getFilter()
 
         val updatedFilter = when (field) {
-            "industry" -> currentFilter.copy(industry = null)
-            "salary" -> currentFilter.copy(salary = null)
-            "onlyWithSalary" -> currentFilter.copy(onlyWithSalary = false)
+            FILTER_INDUSTRY -> currentFilter.copy(industry = null)
+            FILTER_SALARY -> currentFilter.copy(salary = null)
+            FILTER_ONLY_SALARY -> currentFilter.copy(onlyWithSalary = false)
             else -> currentFilter
         }
         saveFilter(updatedFilter)
@@ -57,6 +53,6 @@ class SharedPrefRepositoryImpl(private val sharedPreferences: SharedPreferences)
     }
 
     companion object {
-        const val SHARED_FILTER_KEY = "hh_preferences"
+        const val SHARED_FILTER_KEY = APP_SHARED_PREFS
     }
 }

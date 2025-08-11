@@ -16,7 +16,7 @@ class IndustriesRepositoryImpl(
     private val networkClient: NetworkClient
 ) : IndustriesRepository {
     override fun getIndustries(): Flow<Resource<IndustrySearchResult>> = flow {
-        val response = networkClient.doRequest(IndustriesRequest())
+        val response = networkClient.doRequestForIndustries(IndustriesRequest())
         when (response.resultCode) {
             NO_INTERNET -> emit(Resource.Error("Check connection to internet"))
             REQUEST_OK -> {

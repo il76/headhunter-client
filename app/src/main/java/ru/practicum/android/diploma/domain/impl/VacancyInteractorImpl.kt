@@ -8,8 +8,22 @@ import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
 
 class VacancyInteractorImpl(private val repository: VacancyRepository) : VacancyInteractor {
-    override fun search(query: String, page: Int): Flow<Resource<VacancySearchResult>> {
-        return repository.search(query)
+    override fun search(
+        query: String,
+        page: Int,
+        onlyWithSalary: Boolean,
+        area: String?,
+        industry: String?,
+        salary: Long?
+    ): Flow<Resource<VacancySearchResult>> {
+        return repository.search(
+            query = query,
+            page = page,
+            onlyWithSalary = onlyWithSalary,
+            area = area,
+            industry = industry,
+            salary = salary,
+        )
     }
 
     override fun getVacancyDetails(vacancyId: String): Flow<VacancyDetailsState> {

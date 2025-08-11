@@ -1,18 +1,22 @@
 package ru.practicum.android.diploma.ui.vacancy
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.Phone
@@ -37,16 +41,12 @@ class VacancyFragment : Fragment() {
         val vacancyId = arguments?.getInt(VACANCY_ID, 0) ?: 0
         val useDB = arguments?.getBoolean(ARG_USE_LOCAL_DB) ?: false
         initializeObservers()
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loadVacancy(vacancyId, useDB)
-        }
+        viewModel.getVacancy(vacancyId, useDB)
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
         binding.favButton.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.favoriteAction()
-            }
+            viewModel.favoriteAction()
         }
     }
 
@@ -60,10 +60,10 @@ class VacancyFragment : Fragment() {
             when (screenState) {
                 is VacancyDetailsState.ContentState -> showContent(screenState)
                 VacancyDetailsState.ConnectionError -> showErrorVacancyNotFound()
-                VacancyDetailsState.EmptyState -> TODO()
+                is VacancyDetailsState.EmptyState -> showErrorVacancyNotFound()
                 VacancyDetailsState.LoadingState -> showLoading()
                 VacancyDetailsState.ServerError -> showErrorServer()
-                is VacancyDetailsState.NetworkErrorState -> TODO()
+                is VacancyDetailsState.NetworkErrorState -> showErrorServer()
             }
         }
         viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
@@ -91,7 +91,7 @@ class VacancyFragment : Fragment() {
                 requireContext()
             )
         binding.companyName.text = vacancyFull.employerName
-        binding.descTitle.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
+        binding.descriptionText.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
 
         showExperience(vacancyFull.experience)
         showLogo(vacancyFull.logoUrl)
@@ -105,11 +105,36 @@ class VacancyFragment : Fragment() {
     }
 
     private fun showErrorVacancyNotFound() {
-        TODO()
+        hideContent()
+        binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_nothing_found)
+        binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_no_such_vacancy)
+        binding.includeErrorBlock.errorBlock.isVisible = true
     }
 
     private fun showErrorServer() {
-        TODO()
+        hideContent()
+        binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_server_error_vacancy)
+        binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.search_error)
+        binding.includeErrorBlock.errorBlock.isVisible = true
+    }
+
+    private fun hideContent() {
+        // мне очень не нравится этот код, но без перевёрстывания иначе было быстро не сделать
+        binding.container.isVisible = true
+        binding.progressBar.isVisible = false
+        binding.companyCard.isVisible = false
+        binding.experienceTitle.isVisible = false
+        binding.experienceText.isVisible = false
+        binding.contactsTitle.isVisible = false
+        binding.emailText.isVisible = false
+        binding.phonesText.isVisible = false
+        binding.employmentText.isVisible = false
+        binding.descriptionText.isVisible = false
+        binding.descriptionTitle.isVisible = false
+        binding.emailTitle.isVisible = false
+        binding.phonesTitle.isVisible = false
+        binding.skillsTitle.isVisible = false
+        binding.skillsText.isVisible = false
     }
 
     private fun showLoading() {
@@ -182,6 +207,9 @@ class VacancyFragment : Fragment() {
             binding.emailTitle.isVisible = true
             binding.emailText.isVisible = true
             binding.emailText.text = email
+            binding.emailText.setOnClickListener {
+                viewModel.openEmailApp(email)
+            }
         }
         if (phones.isNullOrEmpty()) {
             binding.phonesTitle.isVisible = false
@@ -189,12 +217,48 @@ class VacancyFragment : Fragment() {
         } else {
             binding.phonesTitle.isVisible = true
             binding.phonesText.isVisible = true
-            val phonesText = phones.joinToString("\n") { phone ->
-                val commentPart = phone.comment?.let { " ($it)" } ?: ""
-                "+${phone.country} ${phone.city} ${phone.number}$commentPart"
-            }
-            binding.phonesText.text = phonesText
+            showClickablePhones(phones)
         }
+        binding.contactsTitle.isVisible = !(email.isNullOrEmpty() && phones.isNullOrEmpty())
+    }
+
+    private fun showClickablePhones(phones: List<Phone>) {
+        val phonesText = SpannableStringBuilder()
+
+        phones.forEach { phone ->
+            val commentPart = phone.comment?.let { " ($it)" } ?: ""
+            val phoneNumber = "+${phone.country} ${phone.city} ${phone.number}"
+            val phoneText = "$phoneNumber$commentPart"
+
+            val start = phonesText.length
+            phonesText.append(phoneText)
+            val end = phonesText.length
+
+            phonesText.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        viewModel.openCallerApp(phoneNumber)
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.color = ds.linkColor
+                        ds.isUnderlineText = false
+                    }
+                },
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            if (phone != phones.last()) {
+                phonesText.append("\n")
+            }
+        }
+
+        binding.phonesText.text = phonesText
+        binding.phonesText.movementMethod = LinkMovementMethod.getInstance()
+        binding.phonesText.highlightColor = Color.TRANSPARENT
     }
 
     companion object {

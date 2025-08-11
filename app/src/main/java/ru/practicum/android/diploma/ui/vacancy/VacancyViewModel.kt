@@ -3,8 +3,10 @@ package ru.practicum.android.diploma.ui.vacancy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.SharingInteractor
 import ru.practicum.android.diploma.domain.api.VacancyLocalRepository
 import ru.practicum.android.diploma.domain.api.VacancyRepository
@@ -26,6 +28,19 @@ class VacancyViewModel(
 
     private var id = -1
     private var loadedFromNetwork = false // Флаг, откуда загружены данные
+
+    fun getVacancy(vacancyId: Int, useDB: Boolean = false) {
+        viewModelScope.launch {
+            try {
+                loadVacancy(vacancyId, useDB)
+            } catch (e: VacancyNotFoundException) {
+                deleteFavoriteVacancy()
+                _screenState.value = VacancyDetailsState.EmptyState(e.message.toString())
+            } catch (e: VacancyErrorException) {
+                _screenState.value = VacancyDetailsState.NetworkErrorState(e.message.toString())
+            }
+        }
+    }
 
     suspend fun loadVacancy(vacancyId: Int, useDB: Boolean = false): Vacancy {
         id = vacancyId
@@ -57,7 +72,7 @@ class VacancyViewModel(
                 state.vacancy
             }
             else -> throw when (state) {
-                is VacancyDetailsState.EmptyState -> VacancyErrorException("Vacancy not found")
+                is VacancyDetailsState.EmptyState -> VacancyNotFoundException(state.message)
                 is VacancyDetailsState.NetworkErrorState -> VacancyErrorException(state.message)
                 is VacancyDetailsState.ServerError -> VacancyErrorException("Server error")
                 is VacancyDetailsState.ConnectionError -> VacancyErrorException("No internet")
@@ -75,6 +90,14 @@ class VacancyViewModel(
 
     fun shareVacancy(url: String) {
         sharingInteractor.share(url)
+    }
+
+    fun openEmailApp(email: String) {
+        sharingInteractor.openEmailApp(email)
+    }
+
+    fun openCallerApp(phone: String) {
+        sharingInteractor.openCallerApp(phone)
     }
 
     suspend fun saveFavoriteVacancy() {
@@ -101,39 +124,16 @@ class VacancyViewModel(
         }
     }
 
-    // Новый метод для загрузки избранной вакансии
-    suspend fun loadFavoriteVacancy(vacancyId: String) {
-        try {
-            val result = localRepository.getVacancyDetails(vacancyId).first()
-            when (result) {
-                is Resource.Success -> {
-                    result.data?.let {
-                        _screenState.value = VacancyDetailsState.ContentState(it)
-                        _isFavorite.value = true
-                    } ?: run {
-                        _screenState.value = VacancyDetailsState.EmptyState
-                        _isFavorite.value = false
-                    }
-                }
-                is Resource.Error -> {
-                    _screenState.value = VacancyDetailsState.NetworkErrorState(result.message ?: "DB Error")
-                    _isFavorite.value = false
-                }
-            }
-        } catch (e: VacancyErrorException) {
-            _screenState.value = VacancyDetailsState.NetworkErrorState(e.message ?: "Error loading favorite")
-            _isFavorite.value = false
-        }
-    }
-
-    suspend fun favoriteAction() {
+    fun favoriteAction() {
         when (val currentState = screenState.value) {
             is VacancyDetailsState.ContentState -> {
                 val isFavorite = _isFavorite.value ?: false
-                if (isFavorite) {
-                    deleteFavoriteVacancy() // Удаляем, если уже в избранном
-                } else {
-                    saveFavoriteVacancy() // Добавляем, если не в избранном
+                viewModelScope.launch {
+                    if (isFavorite) {
+                        deleteFavoriteVacancy() // Удаляем, если уже в избранном
+                    } else {
+                        saveFavoriteVacancy() // Добавляем, если не в избранном
+                    }
                 }
             }
             else -> {
@@ -144,3 +144,4 @@ class VacancyViewModel(
 }
 
 class VacancyErrorException(message: String) : Exception(message)
+class VacancyNotFoundException(message: String) : Exception(message)
