@@ -135,6 +135,8 @@ class VacancyFragment : Fragment() {
         binding.phonesTitle.isVisible = false
         binding.skillsTitle.isVisible = false
         binding.skillsText.isVisible = false
+        binding.favButton.setOnClickListener { null }
+        binding.shareButton.setOnClickListener { null }
     }
 
     private fun showLoading() {
