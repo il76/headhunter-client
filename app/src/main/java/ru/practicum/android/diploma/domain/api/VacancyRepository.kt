@@ -6,7 +6,14 @@ import ru.practicum.android.diploma.domain.models.VacancySearchResult
 import ru.practicum.android.diploma.util.Resource
 
 interface VacancyRepository {
-    fun search(query: String, page: Int = 0): Flow<Resource<VacancySearchResult>>
+    fun search(
+        query: String,
+        page: Int = 0,
+        onlyWithSalary: Boolean = false,
+        area: String? = null,
+        industry: String? = null,
+        salary: Long? = null,
+    ): Flow<Resource<VacancySearchResult>>
 
     fun getVacancyDetails(vacancyId: String): Flow<VacancyDetailsState>
 }

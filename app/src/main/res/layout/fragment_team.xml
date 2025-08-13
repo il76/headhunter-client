@@ -18,23 +18,23 @@
         style="@style/Font32Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_24"
         android:text="@string/team_programmers"
         android:textColor="@color/black_day_white_night" />
 
     <TextView
         style="@style/TeamTextStyle"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_24"
         android:text="@string/team_first" />
 
     <TextView
         style="@style/TeamTextStyle"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_8"
         android:text="@string/team_second" />
 
     <TextView
         style="@style/TeamTextStyle"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_8"
         android:text="@string/team_third" />
 
 </LinearLayout>

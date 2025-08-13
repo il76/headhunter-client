@@ -94,7 +94,14 @@ class SearchViewModel(
 
     private suspend fun loadVacancies(page: Int): VacancyResult {
         return try {
-            val vacancies = repository.search(_state.value.searchQuery, page).first()
+            val filter = sharedPrefInteractor.getFilter()
+            val vacancies = repository.search(
+                _state.value.searchQuery,
+                page,
+                onlyWithSalary = filter.onlyWithSalary ?: false,
+                industry = filter.industry?.id,
+                salary = filter.salary?.toLong(),
+            ).first()
             VacancyResult.Success(vacancies.data)
         } catch (e: IOException) {
             VacancyResult.Error(e)

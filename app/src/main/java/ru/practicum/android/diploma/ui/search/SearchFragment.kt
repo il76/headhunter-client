@@ -32,6 +32,8 @@ class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
 
+    private var ignoreTextChanges = false
+
     private val onVacancyClickDebounce by lazy {
         debounce<Vacancy>(
             CLICK_DEBOUNCE_DELAY,
@@ -54,6 +56,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (ignoreTextChanges) return
                 val value = s?.toString() ?: ""
                 viewModel.updateSearchQuery(value)
                 binding.searchIconClear.isVisible = value.isNotEmpty()
@@ -88,6 +91,13 @@ class SearchFragment : Fragment() {
             findNavController().navigate(
                 R.id.action_searchFragment_to_filterFragment,
             )
+        }
+        // обновлять выборку нужно только при нажатии на кнопку "Применить", но не на стрелку "Назад"
+        parentFragmentManager.setFragmentResultListener(REQUEST_KEY, viewLifecycleOwner) { requestKey, bundle ->
+            val shouldRefresh = bundle.getBoolean(KEY_SHOULD_REFRESH, false)
+            if (shouldRefresh && binding.searchEditText.text.isNotBlank()) {
+                viewModel.refresh()
+            }
         }
     }
 
@@ -137,9 +147,6 @@ class SearchFragment : Fragment() {
 //        binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
 //  если не потребуется - убрать
 //        }
-
-        // слушаем изменения текстового поля
-        binding.searchEditText.addTextChangedListener(textWatcher)
     }
 
     // разбор состояния
@@ -207,7 +214,7 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = false
         binding.vacancyList.isVisible = true
         binding.searchTotalFound.isVisible = true
-        // binding.errorBlock.isVisible = false
+        binding.includeErrorBlock.errorBlock.isVisible = false
     }
 
     // догрузка начата
@@ -253,14 +260,29 @@ class SearchFragment : Fragment() {
     }
 
     private fun renderFilterState(isChecked: Boolean) {
-        when (isChecked) {
-            true -> binding.filterIcon.setImageResource(R.drawable.ic_filters_on)
-            false -> binding.filterIcon.setImageResource(R.drawable.ic_filters_off)
+        if (isChecked) {
+            binding.filterIcon.setImageResource(R.drawable.ic_filters_on)
+        } else {
+            binding.filterIcon.setImageResource(R.drawable.ic_filters_off)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ignoreTextChanges = true // Игнорируем начальное восстановление текста
+        binding.searchEditText.addTextChangedListener(textWatcher)
+        ignoreTextChanges = false
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.searchEditText.removeTextChangedListener(textWatcher)
     }
 
     companion object {
         const val CLICK_DEBOUNCE_DELAY = 2000L
+        const val REQUEST_KEY = "requestKey"
+        const val KEY_SHOULD_REFRESH = "shouldRefresh"
     }
 
 }
