@@ -96,6 +96,6 @@ class VacancyRepositoryImpl(
 
     companion object {
         const val REQUEST_OK = 200
-        const val NO_INTERNET = -1
+        const val NO_INTERNET = 0
     }
 }

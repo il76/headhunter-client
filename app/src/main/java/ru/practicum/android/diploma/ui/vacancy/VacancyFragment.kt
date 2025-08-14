@@ -186,41 +186,32 @@ class VacancyFragment : Fragment() {
 
     private fun showEmploymentAndSchedule(employment: String?, schedule: String?) {
         if (employment.isNullOrEmpty()) {
-            if (schedule.isNullOrEmpty()) {
-                binding.employmentText.isVisible = false
-            } else {
-                binding.employmentText.isVisible = true
+            binding.employmentText.isVisible = !schedule.isNullOrEmpty()
+            if (!schedule.isNullOrEmpty()) {
                 binding.employmentText.text = schedule
             }
         } else {
+            binding.employmentText.isVisible = true
             if (schedule.isNullOrEmpty()) {
-                binding.employmentText.isVisible = true
                 binding.employmentText.text = employment
             } else {
-                binding.employmentText.isVisible = true
                 binding.employmentText.text = "$employment, $schedule"
             }
         }
     }
 
     private fun showContacts(email: String?, phones: List<Phone>?) {
-        if (email.isNullOrEmpty()) {
-            binding.emailTitle.isVisible = false
-            binding.emailText.isVisible = false
-        } else {
-            binding.emailTitle.isVisible = true
-            binding.emailText.isVisible = true
+        binding.emailTitle.isVisible = !email.isNullOrEmpty()
+        binding.emailText.isVisible = !email.isNullOrEmpty()
+        if (!email.isNullOrEmpty()) {
             binding.emailText.text = email
             binding.emailText.setOnClickListener {
                 viewModel.openEmailApp(email)
             }
         }
-        if (phones.isNullOrEmpty()) {
-            binding.phonesTitle.isVisible = false
-            binding.phonesText.isVisible = false
-        } else {
-            binding.phonesTitle.isVisible = true
-            binding.phonesText.isVisible = true
+        binding.phonesTitle.isVisible = !phones.isNullOrEmpty()
+        binding.phonesText.isVisible = !phones.isNullOrEmpty()
+        if (!phones.isNullOrEmpty()) {
             showClickablePhones(phones)
         }
         binding.contactsTitle.isVisible = !(email.isNullOrEmpty() && phones.isNullOrEmpty())
