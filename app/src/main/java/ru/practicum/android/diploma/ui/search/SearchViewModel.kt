@@ -115,7 +115,7 @@ class SearchViewModel(
 
     private fun handleSuccess(result: VacancyResult.Success, page: Int, isInitial: Boolean) {
         val vacancies = result.result?.vacancies ?: emptyList()
-        val totalFound = result.result?.found ?: 0
+        val totalFound = if (page == 0) result.result?.found ?: 0 else _state.value.totalFound
         val canLoadMore = vacancies.size == PAGE_SIZE
 
         _state.update { current ->
@@ -128,7 +128,7 @@ class SearchViewModel(
                     else -> SearchUIState.SearchStatus.SUCCESS
                 },
                 vacancyList = newVacancies,
-                totalFound = totalFound,
+                totalFound = totalFound, // Обновляем только при первой загрузке
                 pagination = SearchUIState.PaginationState.IDLE,
                 canLoadMore = canLoadMore,
                 isRefreshing = false
@@ -137,13 +137,21 @@ class SearchViewModel(
     }
 
     private fun handleError(exception: Exception, isInitial: Boolean) {
-        _state.update {
+        _state.update { current ->
             if (isInitial) {
-                it.copy(status = SearchUIState.SearchStatus.ERROR_NET)
-            } else {
-                it.copy(
-                    pagination = SearchUIState.PaginationState.ERROR(exception),
+                current.copy(
+                    status = SearchUIState.SearchStatus.ERROR_NET,
+                    vacancyList = emptyList(),
+                    totalFound = 0, // Обнуляем только при начальной загрузке
                     isRefreshing = false
+                )
+            } else {
+                current.copy(
+                    pagination = SearchUIState.PaginationState.ERROR(exception),
+                    isRefreshing = false,
+                    // Сохраняем предыдущие значения
+                    totalFound = current.totalFound,
+                    vacancyList = current.vacancyList
                 )
             }
         }
