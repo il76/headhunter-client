@@ -92,6 +92,7 @@ class VacancyFragment : Fragment() {
             )
         binding.companyName.text = vacancyFull.employerName
         binding.descriptionText.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
+        binding.companyLocation.text = vacancyFull.areaName
 
         showExperience(vacancyFull.experience)
         showLogo(vacancyFull.logoUrl)
@@ -123,6 +124,7 @@ class VacancyFragment : Fragment() {
         binding.container.isVisible = true
         binding.progressBar.isVisible = false
         binding.companyCard.isVisible = false
+        binding.companyLocation.isVisible = false
         binding.experienceTitle.isVisible = false
         binding.experienceText.isVisible = false
         binding.contactsTitle.isVisible = false
