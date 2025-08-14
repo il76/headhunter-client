@@ -14,6 +14,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.IndustriesState
 import ru.practicum.android.diploma.databinding.FragmentIndustriesBinding
 import ru.practicum.android.diploma.domain.models.Industry
@@ -42,9 +43,20 @@ class IndustriesFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val value = s?.toString() ?: ""
 
-                industryList.clear()
-                industryList.addAll(viewModel.filterIndustries(value))
-                adapter.notifyDataSetChanged()
+                with(viewModel.filterIndustries(value)) {
+                    if (this.isEmpty() && value.isNotEmpty()) {
+                        industryList.clear()
+                        industryList.addAll(this)
+                        adapter.notifyDataSetChanged()
+                        binding.includeErrorBlock.errorBlock.isVisible = true
+                        binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_nothing_found)
+                        binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(
+                            R.string.industries_list_not_found
+                        )
+                    } else {
+                        showContent(industries = this)
+                    }
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -114,7 +126,7 @@ class IndustriesFragment : Fragment() {
     private fun render(state: IndustriesState) {
         when (state) {
             is IndustriesState.Content -> showContent(state.industries)
-            is IndustriesState.Error -> showError(getString(state.errorMessageId))
+            is IndustriesState.Error -> showError()
             is IndustriesState.Loading -> showLoading()
         }
     }
@@ -124,16 +136,25 @@ class IndustriesFragment : Fragment() {
         industryList.clear()
         industryList.addAll(industries)
         adapter.notifyDataSetChanged()
+        if (industries.isEmpty()) {
+            showError()
+        } else {
+            binding.includeErrorBlock.errorBlock.isVisible = false
+        }
     }
 
-    private fun showError(errorMessage: String) {
+    private fun showError() {
         binding.progressBar.isVisible = false
+        binding.includeErrorBlock.errorBlock.isVisible = true
+        binding.includeErrorBlock.searchResultsPlaceholder.setImageResource(R.drawable.ph_error_get_list)
+        binding.includeErrorBlock.searchResultsPlaceholderCaption.setText(R.string.industries_list_fetch_fail)
         industryList.clear()
         adapter.notifyDataSetChanged()
     }
 
     private fun showLoading() {
         binding.progressBar.isVisible = true
+        binding.includeErrorBlock.errorBlock.isVisible = false
     }
 
     companion object {

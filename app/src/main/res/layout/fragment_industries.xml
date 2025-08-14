@@ -96,6 +96,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_container" />
 
+    <include
+        android:id="@+id/include_error_block"
+        layout="@layout/include_error_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_container" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvIndustryList"
         android:layout_width="match_parent"
