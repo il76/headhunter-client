@@ -81,6 +81,7 @@ class VacancyFragment : Fragment() {
     private fun showContent(screenState: VacancyDetailsState.ContentState) {
         val vacancyFull = screenState.vacancy
         binding.container.isVisible = true
+        binding.includeErrorBlock.errorBlock.isVisible = false
         binding.progressBar.isVisible = false
 
         binding.jobTitle.text = vacancyFull.name
@@ -121,23 +122,8 @@ class VacancyFragment : Fragment() {
     }
 
     private fun hideContent() {
-        // мне очень не нравится этот код, но без перевёрстывания иначе было быстро не сделать
-        binding.container.isVisible = true
+        binding.container.isVisible = false
         binding.progressBar.isVisible = false
-        binding.companyCard.isVisible = false
-        binding.companyLocation.isVisible = false
-        binding.experienceTitle.isVisible = false
-        binding.experienceText.isVisible = false
-        binding.contactsTitle.isVisible = false
-        binding.emailText.isVisible = false
-        binding.phonesText.isVisible = false
-        binding.employmentText.isVisible = false
-        binding.descriptionText.isVisible = false
-        binding.descriptionTitle.isVisible = false
-        binding.emailTitle.isVisible = false
-        binding.phonesTitle.isVisible = false
-        binding.skillsTitle.isVisible = false
-        binding.skillsText.isVisible = false
         binding.favButton.setOnClickListener { null }
         binding.shareButton.setOnClickListener { null }
     }
