@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.data.dto.Address
 import ru.practicum.android.diploma.data.dto.Phone
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
@@ -92,8 +93,8 @@ class VacancyFragment : Fragment() {
             )
         binding.companyName.text = vacancyFull.employerName
         binding.descriptionText.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
-        binding.companyLocation.text = vacancyFull.areaName
 
+        showAddress(vacancyFull.address, vacancyFull.areaName)
         showExperience(vacancyFull.experience)
         showLogo(vacancyFull.logoUrl)
         showKeySkills(vacancyFull.keySkills)
@@ -182,6 +183,14 @@ class VacancyFragment : Fragment() {
             .into(binding.companyLogo)
 
         binding.companyLogo.clipToOutline = true
+    }
+
+    private fun showAddress(address: Address?, area: String) {
+        if (address?.city.isNullOrEmpty() && address?.street.isNullOrEmpty()) {
+            binding.companyLocation.text = area
+        } else {
+            binding.companyLocation.text = "${address?.city}, ${address?.street}"
+        }
     }
 
     private fun showEmploymentAndSchedule(employment: String?, schedule: String?) {

@@ -6,6 +6,7 @@ data class VacancyDetailsResponse(
     val id: String,
     val name: String,
     val area: Area?,
+    val address: Address?,
     val salary: Salary?,
     val employer: Employer?,
     val experience: Experience?,
@@ -15,5 +16,4 @@ data class VacancyDetailsResponse(
     val keySkills: List<KeySkill>?,
     val schedule: Schedule?,
     val contacts: Contacts?,
-
 ) : Response()
