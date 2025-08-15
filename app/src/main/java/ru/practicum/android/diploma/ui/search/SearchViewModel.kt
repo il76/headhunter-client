@@ -6,12 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.SharedPrefInteractor
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.VacancySearchResult
@@ -25,6 +29,9 @@ class SearchViewModel(
 
     private val _state = MutableStateFlow<SearchUIState>(SearchUIState())
     val state: StateFlow<SearchUIState> = _state.asStateFlow()
+
+    private val _showToast = MutableSharedFlow<Int>(extraBufferCapacity = 1)
+    val showToast: SharedFlow<Int> = _showToast.asSharedFlow()
 
     private val _filterState = MutableLiveData<Boolean>()
     fun filterState(): LiveData<Boolean> = _filterState
@@ -64,15 +71,12 @@ class SearchViewModel(
 
     // Подгрузка следующей страницы (при скролле)
     fun loadNextPage() {
-        if (!_state.value.canLoadMore ||
-            _state.value.pagination is SearchUIState.PaginationState.LOADING
-        ) {
+        if (_state.value.pagination is SearchUIState.PaginationState.LOADING) {
             return
         }
 
         currentPage++
         _state.update { it.copy(pagination = SearchUIState.PaginationState.LOADING) }
-
         loadData(page = currentPage, isInitial = false)
     }
 
@@ -102,7 +106,11 @@ class SearchViewModel(
                 industry = filter.industry?.id,
                 salary = filter.salary?.toLong(),
             ).first()
-            VacancyResult.Success(vacancies.data)
+            if (vacancies.message.isNullOrEmpty()) {
+                VacancyResult.Success(vacancies.data)
+            } else {
+                VacancyResult.Error(exception = IOException(vacancies.message))
+            }
         } catch (e: IOException) {
             VacancyResult.Error(e)
         } catch (e: CancellationException) {
@@ -115,7 +123,7 @@ class SearchViewModel(
 
     private fun handleSuccess(result: VacancyResult.Success, page: Int, isInitial: Boolean) {
         val vacancies = result.result?.vacancies ?: emptyList()
-        val totalFound = result.result?.found ?: 0
+        val totalFound = if (page == 0) result.result?.found ?: 0 else _state.value.totalFound
         val canLoadMore = vacancies.size == PAGE_SIZE
 
         _state.update { current ->
@@ -128,7 +136,7 @@ class SearchViewModel(
                     else -> SearchUIState.SearchStatus.SUCCESS
                 },
                 vacancyList = newVacancies,
-                totalFound = totalFound,
+                totalFound = totalFound, // Обновляем только при первой загрузке
                 pagination = SearchUIState.PaginationState.IDLE,
                 canLoadMore = canLoadMore,
                 isRefreshing = false
@@ -139,13 +147,23 @@ class SearchViewModel(
     private fun handleError(exception: Exception, isInitial: Boolean) {
         _state.update {
             if (isInitial) {
-                it.copy(status = SearchUIState.SearchStatus.ERROR_NET)
+                it.copy(
+                    status = SearchUIState.SearchStatus.ERROR_NET,
+                    vacancyList = emptyList(),
+                    totalFound = 0,
+                    isRefreshing = false
+                )
             } else {
                 it.copy(
                     pagination = SearchUIState.PaginationState.ERROR(exception),
-                    isRefreshing = false
+                    isRefreshing = false,
+                    vacancyList = it.vacancyList,
+                    totalFound = it.totalFound
                 )
             }
+        }
+        if (!isInitial) {
+            showToast(R.string.search_no_internet_check)
         }
     }
 
@@ -179,6 +197,12 @@ class SearchViewModel(
             _filterState.postValue(false)
         } else {
             _filterState.postValue(true)
+        }
+    }
+
+    fun showToast(messageId: Int) {
+        viewModelScope.launch {
+            _showToast.emit(messageId)
         }
     }
 
