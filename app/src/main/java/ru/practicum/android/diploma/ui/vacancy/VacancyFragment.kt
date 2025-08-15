@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.data.dto.Address
 import ru.practicum.android.diploma.data.dto.Phone
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetailsState
@@ -80,6 +81,7 @@ class VacancyFragment : Fragment() {
     private fun showContent(screenState: VacancyDetailsState.ContentState) {
         val vacancyFull = screenState.vacancy
         binding.container.isVisible = true
+        binding.includeErrorBlock.errorBlock.isVisible = false
         binding.progressBar.isVisible = false
 
         binding.jobTitle.text = vacancyFull.name
@@ -93,6 +95,7 @@ class VacancyFragment : Fragment() {
         binding.companyName.text = vacancyFull.employerName
         binding.descriptionText.text = Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT)
 
+        showAddress(vacancyFull.address, vacancyFull.areaName)
         showExperience(vacancyFull.experience)
         showLogo(vacancyFull.logoUrl)
         showKeySkills(vacancyFull.keySkills)
@@ -119,22 +122,10 @@ class VacancyFragment : Fragment() {
     }
 
     private fun hideContent() {
-        // мне очень не нравится этот код, но без перевёрстывания иначе было быстро не сделать
-        binding.container.isVisible = true
+        binding.container.isVisible = false
         binding.progressBar.isVisible = false
-        binding.companyCard.isVisible = false
-        binding.experienceTitle.isVisible = false
-        binding.experienceText.isVisible = false
-        binding.contactsTitle.isVisible = false
-        binding.emailText.isVisible = false
-        binding.phonesText.isVisible = false
-        binding.employmentText.isVisible = false
-        binding.descriptionText.isVisible = false
-        binding.descriptionTitle.isVisible = false
-        binding.emailTitle.isVisible = false
-        binding.phonesTitle.isVisible = false
-        binding.skillsTitle.isVisible = false
-        binding.skillsText.isVisible = false
+        binding.favButton.setOnClickListener { null }
+        binding.shareButton.setOnClickListener { null }
     }
 
     private fun showLoading() {
@@ -180,43 +171,42 @@ class VacancyFragment : Fragment() {
         binding.companyLogo.clipToOutline = true
     }
 
+    private fun showAddress(address: Address?, area: String) {
+        if (address?.city.isNullOrEmpty() && address?.street.isNullOrEmpty()) {
+            binding.companyLocation.text = area
+        } else {
+            binding.companyLocation.text = "${address?.city}, ${address?.street}"
+        }
+    }
+
     private fun showEmploymentAndSchedule(employment: String?, schedule: String?) {
         if (employment.isNullOrEmpty()) {
-            if (schedule.isNullOrEmpty()) {
-                binding.employmentText.isVisible = false
-            } else {
-                binding.employmentText.isVisible = true
+            binding.employmentText.isVisible = !schedule.isNullOrEmpty()
+            if (!schedule.isNullOrEmpty()) {
                 binding.employmentText.text = schedule
             }
         } else {
+            binding.employmentText.isVisible = true
             if (schedule.isNullOrEmpty()) {
-                binding.employmentText.isVisible = true
                 binding.employmentText.text = employment
             } else {
-                binding.employmentText.isVisible = true
                 binding.employmentText.text = "$employment, $schedule"
             }
         }
     }
 
     private fun showContacts(email: String?, phones: List<Phone>?) {
-        if (email.isNullOrEmpty()) {
-            binding.emailTitle.isVisible = false
-            binding.emailText.isVisible = false
-        } else {
-            binding.emailTitle.isVisible = true
-            binding.emailText.isVisible = true
+        binding.emailTitle.isVisible = !email.isNullOrEmpty()
+        binding.emailText.isVisible = !email.isNullOrEmpty()
+        if (!email.isNullOrEmpty()) {
             binding.emailText.text = email
             binding.emailText.setOnClickListener {
                 viewModel.openEmailApp(email)
             }
         }
-        if (phones.isNullOrEmpty()) {
-            binding.phonesTitle.isVisible = false
-            binding.phonesText.isVisible = false
-        } else {
-            binding.phonesTitle.isVisible = true
-            binding.phonesText.isVisible = true
+        binding.phonesTitle.isVisible = !phones.isNullOrEmpty()
+        binding.phonesText.isVisible = !phones.isNullOrEmpty()
+        if (!phones.isNullOrEmpty()) {
             showClickablePhones(phones)
         }
         binding.contactsTitle.isVisible = !(email.isNullOrEmpty() && phones.isNullOrEmpty())

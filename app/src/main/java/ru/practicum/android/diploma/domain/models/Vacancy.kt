@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.domain.models
 
+import ru.practicum.android.diploma.data.dto.Address
 import ru.practicum.android.diploma.data.dto.Contacts
 
 data class Vacancy(
@@ -7,6 +8,7 @@ data class Vacancy(
     val name: String,
     val logoUrl: String,
     val areaName: String,
+    val address: Address? = null,
     val employerName: String,
     val salaryCurrency: String,
     val salaryFrom: Int?,

@@ -87,6 +87,14 @@ class SearchFragment : Fragment() {
         setupSearchView()
         observeState()
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.showToast.collect { resId ->
+                    Toast.makeText(requireContext(), getString(resId), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         binding.filterIcon.setOnClickListener {
             findNavController().navigate(
                 R.id.action_searchFragment_to_filterFragment,
@@ -252,7 +260,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showPaginationError(error: Throwable) {
-        Toast.makeText(requireContext(), "Ошибка загрузки: ${error.message}", Toast.LENGTH_SHORT).show()
+        hideBottomLoading()
     }
 
     private fun handleRefreshState(state: SearchUIState) {
